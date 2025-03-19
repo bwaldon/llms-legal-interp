@@ -1,1 +1,2 @@
+vllm
 datasets==3.3.2
