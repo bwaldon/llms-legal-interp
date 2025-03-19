@@ -6,9 +6,12 @@ from datasets import Dataset, load_dataset
 
 def get_prompt_dataset(prompt_function, prompt_type):
     def convert_header_to_definition(header):
-        match re.findall(r"<b>\"(.*?)\"</b>", header):
+        print(header)
+        match re.findall(r"<b>[\"\s]*(.*?)[\"\s]*</?b>", header):
             case [x]:
                 return x
+            case [x, y]:
+                return x + y
             case _:
                 return None
 
@@ -32,11 +35,11 @@ def binary_option_question(scenario, definition, options):
         """
 
 def no_or_yes_question(item):
-    return binary_option_question(item["scenario"], item["definition"], ['No', 'Yes'])
+    return binary_option_question(item["continuation"], item["definition"], ['No', 'Yes'])
 
 
 def yes_or_no_question(item):
-    return binary_option_question(item["scenario"], item["definition"], ['Yes', 'No'])
+    return binary_option_question(item["continuation"], item["definition"], ['Yes', 'No'])
 
 
 def make_it_do_you_agree(item, actor="Insurance Company"):
@@ -48,3 +51,7 @@ def make_it_do_you_agree(item, actor="Insurance Company"):
 
 def get_yes_or_no_vague_contracts():
     return get_prompt_dataset(yes_or_no_question, "yes_or_no")
+
+if __name__ == "__main__":
+    dataset = get_yes_or_no_vague_contracts()["test"]
+    dataset.to_csv("prompts/yes_or_no_vague_contracts.csv")
