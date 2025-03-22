@@ -29,16 +29,16 @@ def yes_or_no_question(item):
     return binary_option_question(item["continuation"], item["definition"], ['Yes', 'No'])
 
 
-def make_it_do_you_agree(item, actor="Insurance Company"):
-    return f"""{item.header}
-    {item.continuation}
-    {actor} decided that the claim is {item.version} under the policy.
-    Do you agree?
-    """
+# def make_it_do_you_agree(item, actor="Insurance Company"):
+#     return f"""{item.header}
+#     {item.continuation}
+#     {actor} decided that the claim is {item.version} under the policy.
+#     Do you agree?
+#     """
 
 def get_yes_or_no_vague_contracts():
     return get_prompt_dataset(yes_or_no_question, "yes_or_no")
 
 if __name__ == "__main__":
     dataset = get_yes_or_no_vague_contracts()["test"]
-    dataset.to_csv("data/yes_or_no_vague_contracts_prompts.csv")
+    dataset.to_csv("data/prompts/yes_or_no_vague_contracts_prompts.csv")
