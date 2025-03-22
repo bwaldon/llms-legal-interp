@@ -3,22 +3,9 @@ import re
 
 from datasets import Dataset, load_dataset
 
-
 def get_prompt_dataset(prompt_function, prompt_type):
-    def convert_header_to_definition(header):
-        print(header)
-        match re.findall(r"<b>[\"\s]*(.*?)[\"\s]*</?b>", header):
-            case [x]:
-                return x
-            case [x, y]:
-                return x + y
-            case _:
-                return None
-
-    VAGUE_CONTRACTS_FILE = "data/vague_contracts.csv"
+    VAGUE_CONTRACTS_FILE = "data/clean/vague_contracts.csv"
     vague_contracts_dataset = load_dataset("csv", data_files={"test": VAGUE_CONTRACTS_FILE})
-    vague_contracts_dataset["test"] = vague_contracts_dataset["test"].map(
-        lambda x: {"definition": convert_header_to_definition(x["header"])}, batched=False)
     print(vague_contracts_dataset.shape)
     vague_contracts_prompts = vague_contracts_dataset.map(lambda x: {
         "prompt": prompt_function(x),
@@ -54,4 +41,4 @@ def get_yes_or_no_vague_contracts():
 
 if __name__ == "__main__":
     dataset = get_yes_or_no_vague_contracts()["test"]
-    dataset.to_csv("prompts/yes_or_no_vague_contracts.csv")
+    dataset.to_csv("data/yes_or_no_vague_contracts_prompts.csv")
