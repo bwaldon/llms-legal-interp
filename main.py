@@ -1,5 +1,5 @@
 from model import MetaLinguisticPrompt, MetaLinguisticJudgement
-from huggingface_hub import login
+from huggingface_hub import auth_check
 import csv
 import gc
 import torch
@@ -53,9 +53,12 @@ def load_and_infer_with_model(model_name, prompts):
         print_prompts_and_output(p, o)
     del model
 
+def hf_auth_check():
+    for model in model_list:
+        auth_check(model)
 
 if __name__ == "__main__":
-    login(token=open("hf_token.txt").read())
+    hf_auth_check()
     prompts = get_prompts()
     for model_name in model_list:
         load_and_infer_with_model(model_name, prompts)
