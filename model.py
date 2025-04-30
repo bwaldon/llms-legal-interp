@@ -39,7 +39,7 @@ class MetaLinguisticPrompt:
 
         return ""
 
-class MetaLinguisticJudgement:
+class JudgementModel(LLM):
     def __init__(self, model_name, max_model_len=1024):
         self.model_name = model_name
         self.sampling_params = SamplingParams(temperature=0.8, top_p=0.95, max_tokens=1024)
@@ -47,8 +47,7 @@ class MetaLinguisticJudgement:
         self.llm = LLM(model_name, max_model_len=max_model_len)
 
     def infer(self, prompts: List[MetaLinguisticPrompt]) -> List[str]:
-        outputs = self.llm.generate([p.text for p in prompts], self.sampling_params)
-
+        outputs = self.llm.generate(prompts, self.sampling_params)
         return [output.outputs[0].text for output in outputs]
 
 

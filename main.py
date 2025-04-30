@@ -1,8 +1,12 @@
-from model import MetaLinguisticPrompt, MetaLinguisticJudgement
-from huggingface_hub import auth_check
-import csv
 import gc
+import csv
+
 import torch
+from huggingface_hub import auth_check
+
+from model import MetaLinguisticPrompt, JudgementModel
+from prompts import get_yes_or_no_vague_contracts
+
 
 model_list = [
     "meta-llama/Llama-3.2-1B-Instruct",
@@ -36,10 +40,10 @@ def get_prompts():
     ]
 
 
-def load_and_infer_with_model(model_name, prompts):
+def load_and_infer_with_model(model_name, prompts, dataset):
     print(model_name + "\n")
-    model = MetaLinguisticJudgement(model_name)
-    outputs = model.infer(prompts)
+    model = JudgementModel(model_name)
+    outputs = model.infer(dataset["prompt"])
 
     def print_prompts_and_output(p, o):
         star_20 = '*' * 20
@@ -52,14 +56,16 @@ def load_and_infer_with_model(model_name, prompts):
     for p, o in zip(prompts, outputs):
         print_prompts_and_output(p, o)
     del model
+    cleanup()
 
-def hf_auth_check():
+def hf_auth_check(model_list):
     for model in model_list:
         auth_check(model)
 
 if __name__ == "__main__":
-    hf_auth_check()
+    hf_auth_check(model_list)
+    # TODO make it a dataset
     prompts = get_prompts()
+    prompts_dataset = get_yes_or_no_vague_contracts()["test"]
     for model_name in model_list:
-        load_and_infer_with_model(model_name, prompts)
-        cleanup()
+        load_and_infer_with_model(model_name, prompts, prompts_dataset)
