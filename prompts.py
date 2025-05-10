@@ -6,11 +6,11 @@ from datasets import Dataset, load_dataset
 def get_prompt_dataset(prompt_function, prompt_type):
     VAGUE_CONTRACTS_FILE = "data/clean/vague_contracts.csv"
     vague_contracts_dataset = load_dataset("csv", data_files={"test": VAGUE_CONTRACTS_FILE})
-    print(vague_contracts_dataset.shape)
     vague_contracts_prompts = vague_contracts_dataset.map(lambda x: {
         "prompt": prompt_function(x),
         "prompt_type": prompt_type,
     })
+
     return vague_contracts_prompts
 
 #1 Binary (Meaning) Judgements
