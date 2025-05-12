@@ -1,4 +1,8 @@
 import argparse
+
+from model import MetaLinguisticJudgement
+from prompts import MetaLinguisticPrompt
+from huggingface_hub import login
 import csv
 import gc
 from collections import namedtuple
@@ -25,6 +29,7 @@ def set_random_seed(seed):
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
     torch.use_deterministic_algorithms(True, warn_only=True)
+
 
 model_list = [
     "meta-llama/Llama-3.2-1B",
@@ -82,7 +87,9 @@ def load_and_infer_with_model(model_name, seed, output_type, prompts, dataset):
     def print_prompts_and_output(p, o):
         result = result_from_output(p, o)
         star_20 = '*' * 20
-        output_string = f"""
+        output_string = f"""{result.prompt}
+
+        
         {star_20}{result.topic}{star_20}{result.nudge}{star_20}
         
         {p.text}
