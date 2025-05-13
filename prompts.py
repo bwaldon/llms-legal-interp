@@ -3,52 +3,8 @@ from typing import Literal
 import re
 from pprint import pprint
 
-from datasets import Dataset, IterableDataset, load_dataset
-
-def get_prompt_dataset(prompt_function, prompt_type):
-    VAGUE_CONTRACTS_FILE = "data/clean/vague_contracts.csv"
-    vague_contracts_dataset = load_dataset("csv", data_files={"test": VAGUE_CONTRACTS_FILE})
-    vague_contracts_prompts = vague_contracts_dataset.map(lambda x: {
-        "prompt": prompt_function(x),
-        "prompt_type": prompt_type,
-    })
-
-    return vague_contracts_prompts
-
-#1 Binary (Meaning) Judgements
-# Question style similar to summarization from Blair-Stanek et al.
-def binary_option_question(scenario, definition, options):
-    return f"""Consider the following:
-        {scenario} 
-        Does it contain an instance of {definition}? Answer with ONLY the string {options[0]} or {options[1]}:   
-        """
-
-def no_or_yes_question(item):
-    return binary_option_question(item["continuation"], item["definition"], ['No', 'Yes'])
-
-
-def yes_or_no_question(item):
-    return binary_option_question(item["continuation"], item["definition"], ['Yes', 'No'])
-
-
-# def make_it_do_you_agree(item, actor="Insurance Company"):
-#     return f"""{item.header}
-#     {item.continuation}
-#     {actor} decided that the claim is {item.version} under the policy.
-#     Do you agree?
-#     """
-
-def get_yes_or_no_vague_contracts():
-    return get_prompt_dataset(yes_or_no_question, "yes_or_no")
-
-## Coverage Prompt functions - posing the questions with the proxy of coverage
-
-def coverage_binary_question(contract):
-    YES_OR_NO_PROMPT = "Answer with ONLY the string Yes or the string No"
-    return {"prompt": f"""{contract['header']}
-    {contract['continuation']}
-    Considering just how the word "{contract['locus_of_uncertainty']}" would be understood by ordinary speakers of English, Is {contract['person_name']} covered by the John covered by the insurance? {YES_OR_NO_PROMPT}
-    """}
+from datasets import load_dataset, concatenate_datasets
+from tqdm import tqdm
 
 class MetaLinguisticPrompt:
     def __init__(self, nudge=None, features=None, topic="landscaping"):
@@ -56,7 +12,6 @@ class MetaLinguisticPrompt:
         self.features = features
         self.topic = topic
 
-        self.text = self.__make_prompt()
         self.get_base_text()
 
         if features is not None:
@@ -142,16 +97,92 @@ class MetaLinguisticPrompt:
         context, policy, ambiguity = data[3], data[4], data[11]
 
         return ""
+
+def locus_premise(locus_of_uncertainty):
+    return f"Considering just how the word \"{locus_of_uncertainty}\" would be understood by ordinary speakers of English"
+
+## Coverage Prompt functions - posing the questions with the proxy of coverage
+
+def is_person_covered_question(person_name):
+    return f"Is {person_name} covered by the insurance?"
+def coverage_binary_question(binary_question_suffix, contract):
+    # list for HF
+    return f"""{contract['header']}
+{contract['continuation']}
+{locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question(contract['person_name'])}? {binary_question_suffix}"""
+
+ANSWER_TRIGGER="Final answer is:"
+YES_NO_QUESTION = f"Yes or No? {ANSWER_TRIGGER}"
+NO_YES_QUESTION = f"No or Yes? {ANSWER_TRIGGER}"
+def coverage_binary_question_yes_no(contract):
+    return coverage_binary_question(YES_NO_QUESTION, contract)
+
+
+def coverage_binary_question_no_yes(contract):
+    return coverage_binary_question(NO_YES_QUESTION, contract)
+
+
+def coverage_agreement(contract):
+    return f"""{contract['header']}
+    {contract['continuation']}
+    {locus_premise(contract['locus_of_uncertainty'])}, {contract['person_name']} is covered by the insurance. Do you agree? {YES_NO_QUESTION} {ANSWER_TRIGGER}"""
+
+
+def coverage_agreement_on_negation(contract):
+    return f"""{contract['header']}
+    {contract['continuation']}
+    {locus_premise(contract['locus_of_uncertainty'])}, {contract['person_name']} is not covered by the insurance. Do you agree? {YES_NO_QUESTION} {ANSWER_TRIGGER}"""
+
+def coverage_disagreement(contract):
+    return f"""{contract['header']}
+    {contract['continuation']}
+    {locus_premise(contract['locus_of_uncertainty'])}, {contract['person_name']} is covered by the insurance. Do you disagree? {YES_NO_QUESTION} {ANSWER_TRIGGER}"""
+
+def coverage_disagreement_on_negation(contract):
+    return f"""{contract['header']}
+    {contract['continuation']}
+    {locus_premise(contract['locus_of_uncertainty'])}, {contract['person_name']} is not covered by the insurance. Do you disagree? {YES_NO_QUESTION} {ANSWER_TRIGGER}"""
+
+def coverage_options(contract):
+    return f"""{contract['header']}
+        {contract['continuation']}
+    {locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question(contract['person_name'])} Options: A. {contract['person_name']} is covered. B. {contract['person_name']} is not covered. {ANSWER_TRIGGER}:"""
+
+def coverage_options_flipped(contract):
+    return f"""{contract['header']}
+        {contract['continuation']}
+    {locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question(contract['person_name'])} Options: A. {contract['person_name']} is not covered. B. {contract['person_name']} is covered. {ANSWER_TRIGGER}"""
+
+
+def construct_dataset(prompt_types):
+    VAGUE_CONTRACTS_FILE = "data/clean/vague_contracts.csv"
+    vague_contracts_dataset = load_dataset("csv", data_files={"test": VAGUE_CONTRACTS_FILE})
+    prompt_datasets = list()
+    for prompt_type, prompt_function in tqdm(prompt_types.items()):
+        prompts_dataset = vague_contracts_dataset["test"].map(lambda x: {
+            "prompt": prompt_function(x),
+            "prompt_type": prompt_type
+        })
+        print(prompt_type, prompts_dataset)
+        prompt_datasets.append(prompts_dataset)
+    return concatenate_datasets(prompt_datasets)
+
+def get_dataset_for_coverage_questions():
+    return construct_dataset(
+        {
+            "yes_or_no": coverage_binary_question_yes_no,
+            "no_or_yes": coverage_binary_question_no_yes,
+            "agreement": coverage_agreement,
+            "agreement_negation": coverage_agreement_on_negation,
+            "disagreement": coverage_disagreement,
+            "disagreement_negation": coverage_disagreement_on_negation,
+            "options": coverage_options,
+            "options_flipped": coverage_options_flipped,
+        }
+    )
+
+
 if __name__ == "__main__":
-    # dataset = get_yes_or_no_vague_contracts()
-    # dataset.to_csv("data/prompts/yes_or_no_vague_contracts_prompts.csv")
-    landscaping_dataset = Dataset.from_csv("data/landscaping.csv")
-    dataset = landscaping_dataset.map(coverage_binary_question)
-    for item in dataset:
-        pprint(item)
-
-
-
-
-
-
+    dataset = get_dataset_for_coverage_questions()
+    print(dataset)
+    dataset.to_csv("data/prompts/coverage_8_vague_contracts_prompts.csv")

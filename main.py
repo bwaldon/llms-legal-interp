@@ -77,12 +77,13 @@ def get_prompts():
     model.infer([prompt])
     
 """
-def load_and_infer_with_model(model_name, seed, output_type, prompts, dataset):
+def load_and_infer_with_model(model_name, seed, prompts, dataset):
     print(model_name + "\n")
     model = MetaLinguisticJudgement(model_name, seed)
-    # outputs = model.infer(dataset["prompt"])
 
-
+    def result_from_output(prompt, output):
+        PromptResult = namedtuple('PromptResult', ['prompt', 'title', 'prompt_type',  'output', 'output_prob', 'output_token_probs', 'token_probs'])
+        return PromptResult(prompt, prompt.title, prompt.prompt_title, output.text, output.cumulative_logprob,  output.logprobs, None)
 
     def print_prompts_and_output(p, o):
         result = result_from_output(p, o)
@@ -90,7 +91,7 @@ def load_and_infer_with_model(model_name, seed, output_type, prompts, dataset):
         output_string = f"""{result.prompt}
 
         
-        {star_20}{result.topic}{star_20}{result.nudge}{star_20}
+        {star_20}{result.title}{star_20}{result.title}{star_20}
         
         {p.text}
         
@@ -98,7 +99,6 @@ def load_and_infer_with_model(model_name, seed, output_type, prompts, dataset):
         
         {result.output_prob}
         """
-
         # output_string += f"{star_20}{p.topic}{star_20}{p.nudge}{star_20}"
         # output_string += "\n\n"
         # output_string += p.text
@@ -106,40 +106,33 @@ def load_and_infer_with_model(model_name, seed, output_type, prompts, dataset):
         # output_string += o
         # output_string += "\n\n\n"
         print(output_string)
+        return result
 
+    outputs = model.infer(prompts)
+    # Collate data and outputs
+    def collate_data_and_outputs(dataset, outputs):
+        for d, o in zip(dataset, outputs):
+            print_prompts_and_output(d[["prompt", "title", "prompt_type"]], o)
+    collate_data_and_outputs(dataset, outputs)
 
-    def result_from_output(prompt, output):
-        PromptResult = namedtuple('PromptResult', ['prompt', 'topic', 'nudge', 'output', 'output_prob', 'output_token_probs', 'token_probs'])
-        return PromptResult(prompt, prompt.topic, prompt.nudge , output.text, output.cumulative_logprob,  output.logprobs, None)
-
-    match output_type:
-        case OutputType.TEXT:
-            outputs = model.infer([prompt.text for prompt in prompts])
-            for p, o in zip(prompts, outputs):
-                print_prompts_and_output(p, o)
-        case OutputType.LOGPROBS:
-            outputs = model.probs(prompts)
-            print_logprobs(outputs)
     del model
     cleanup()
 
-class OutputType(Enum):
-    TEXT = "text"
-    LOGPROBS = "logprobs"
+# class OutputType(Enum):
+#     TEXT = "text"
+#     LOGPROBS = "logprobs"
 
 def hf_auth_check(model_list):
     for model in model_list:
         auth_check(model)
 
-def main(seed, output_type):
-    prompts = get_prompts()
+def main(seed):
     prompts_dataset = get_yes_or_no_vague_contracts()["test"]
     for model_name in model_list:
-        load_and_infer_with_model(model_name, seed, output_type, prompts, prompts_dataset)
+        load_and_infer_with_model(model_name, seed, prompts_dataset)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--type", type=OutputType, default=OutputType.TEXT)
     args = parser.parse_args()
-    main(args.seed, args.type)
+    main(args.seed)
