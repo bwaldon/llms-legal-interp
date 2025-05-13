@@ -20,29 +20,29 @@ class MetaLinguisticPrompt:
     def get_base_text(self):
         if self.topic == "landscaping":
             if "question" in self.features:
-                self.text = ('Can you consider the ordinary meaning of "landscaping",'
+                self.text += ('Can you consider the ordinary meaning of "landscaping",'
                          ' and decide whether installing an in-ground trampoline would be included in such meaning?')
             elif "arg" in self.features:
-                self.text = ('Considering the ordinary meaning of "landscaping", '
+                self.text += ('Considering the ordinary meaning of "landscaping", '
                              'installing an in-ground trampoline is landscaping.')
             elif "neg_arg" in self.features:
-                self.text = ('Considering the ordinary meaning of "landscaping", '
+                self.text += ('Considering the ordinary meaning of "landscaping", '
                              'installing an in-ground trampoline is not landscaping.')
             elif "event" in self.features:
-                self.text = ('Consider the ordinary meaning of "landscaping". '
+                self.text += ('Consider the ordinary meaning of "landscaping". '
                              'Abhishek was installing an in-ground trampoline in his backyard, when he suffered an injury.')
         elif self.topic == "restraining":
             if "question" in self.features:
-                self.text = ('Can you tell me the ordinary meaning of "physically restraining someone",'
+                self.text += ('Can you tell me the ordinary meaning of "physically restraining someone",'
                              ' and whether holding someone at gunpoint and telling them not to move would be included in such meaning?')
             elif "arg" in self.features:
-                self.text = ('Considering the ordinary meaning of "physically restraining someone", '
+                self.text += ('Considering the ordinary meaning of "physically restraining someone", '
                              'holding someone at gunpoint and telling them not to move is landscaping.')
             elif "neg_arg" in self.features:
-                self.text = ('Considering the ordinary meaning of "physically restraining someone", '
+                self.text += ('Considering the ordinary meaning of "physically restraining someone", '
                              'holding someone at gunpoint and telling them not to move is not landscaping.')
             elif "event" in self.features:
-                self.text = ('Consider the ordinary meaning of "physically restraining someone". '
+                self.text += ('Consider the ordinary meaning of "physically restraining someone". '
                              'Hyun was being held at gunpoint and told not to move.')
         elif self.topic == "vague":
             self.text: str = self.from_vague_contracts()
@@ -71,9 +71,13 @@ class MetaLinguisticPrompt:
         elif "neg_q_cover" in self.features:
             self.text += " Is his injury not covered under his insurance?"
         elif "mc_prompt" in self.features:
-            self.text += " Which is more likely? 1. His injury is covered. 2. His injury is not covered."
+            self.text += " Which is more likely? Options: A. His injury is covered. B. His injury is not covered."
         elif "mc_prompt_reverse" in self.features:
-            self.text += " Which is more likely? 1. His injury is not covered. 2. His injury is covered."
+            self.text += " Which is more likely? Options: A. His injury is not covered. B. His injury is covered."
+
+        answer_trigger = "\nThe final answer is: "
+        self.text += answer_trigger
+
 
     def add_nudge(self):
         if self.nudge is None:
