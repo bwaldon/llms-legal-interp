@@ -26,15 +26,11 @@ def set_random_seed(seed):
         torch.cuda.manual_seed_all(seed)
     torch.use_deterministic_algorithms(True, warn_only=True)
 
-
-
-
-
 model_list = [
     "meta-llama/Llama-3.2-1B",
     "meta-llama/Llama-3.2-1B-Instruct",
-    "meta-llama/Llama-3.2-3B",
-    "meta-llama/Llama-3.2-3B-Instruct",
+    # "meta-llama/Llama-3.2-3B",
+    # "meta-llama/Llama-3.2-3B-Instruct",
     # "meta-llama/Llama-3.2-8B",
     # "gpt2-medium",
     # "gpt2-large",
@@ -87,6 +83,8 @@ def load_and_infer_with_model(model_name, seed, output_type, prompts, dataset):
         star_20 = '*' * 20
         output_string = f"""
         {star_20}{result.topic}{star_20}{result.nudge}{star_20}
+        
+        {p.text}
         
         {result.output}
         

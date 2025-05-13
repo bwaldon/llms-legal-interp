@@ -58,22 +58,22 @@ class MetaLinguisticPrompt:
 
         if "bool" in self.features:
             if "reverse" in self.features:
-                self.text += " No, or yes?"
+                self.text += " No, or yes? Short answer: "
             else:
-                self.text += " Yes, or no?"
+                self.text += " Yes, or no? Short answer: "
         elif "q_agree" in self.features:
             if "neg" in self.features:
-                self.text += " Do you disagree?"
+                self.text += " Do you disagree? Short answer: "
             else:
-                self.text += " Do you agree?"
+                self.text += " Do you agree? Short answer: "
         elif "q_cover" in self.features:
-            self.text += " Is his injury covered under his insurance?"
+            self.text += " Is his injury covered under his insurance? Short answer: "
         elif "neg_q_cover" in self.features:
-            self.text += " Is his injury not covered under his insurance?"
+            self.text += " Is his injury not covered under his insurance? Short answer: "
         elif "mc_prompt" in self.features:
-            self.text += " Which is more likely? 1. His injury is covered. 2. His injury is not covered."
+            self.text += " Which is more likely? Options: A. His injury is covered. B. His injury is not covered. Final answer: "
         elif "mc_prompt_reverse" in self.features:
-            self.text += " Which is more likely? 1. His injury is not covered. 2. His injury is covered."
+            self.text += " Which is more likely? Options: A. His injury is not covered. B. His injury is covered. Final answer: "
 
     def add_nudge(self):
         if self.nudge is None:
