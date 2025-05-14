@@ -1,22 +1,16 @@
 import argparse
 
-from model import MetaLinguisticJudgement
-from prompts import MetaLinguisticPrompt
-from huggingface_hub import login
-import csv
 import gc
 from collections import namedtuple
-
-from huggingface_hub import auth_check
 import torch
-
-from model import MetaLinguisticPrompt, MetaLinguisticJudgement
-
 import random
 import numpy as np
 
-from enum import Enum
-from prompts import get_yes_or_no_vague_contracts
+from huggingface_hub import auth_check
+
+from prompts import get_dataset_for_coverage_questions
+from model import MetaLinguisticPrompt, MetaLinguisticJudgement
+from datasets import Dataset
 
 def print_logprobs(logprobs):
     for prompt_logprobs in logprobs:
@@ -77,21 +71,23 @@ def get_prompts():
     model.infer([prompt])
     
 """
-def load_and_infer_with_model(model_name, seed, prompts, dataset):
+def load_and_infer_with_model(model_name, seed, dataset):
     print(model_name + "\n")
     model = MetaLinguisticJudgement(model_name, seed)
 
-    def result_from_output(prompt, output):
+    def result_from_output(model_name, prompt, output):
         PromptResult = namedtuple('PromptResult', ['prompt', 'title', 'prompt_type',  'output', 'output_prob', 'output_token_probs', 'token_probs'])
-        return PromptResult(prompt, prompt.title, prompt.prompt_title, output.text, output.cumulative_logprob,  output.logprobs, None)
+        return PromptResult(prompt['prompt'], prompt['title'], prompt['prompt_type'], output.text, output.cumulative_logprob,  output.logprobs, None)
 
-    def print_prompts_and_output(p, o):
-        result = result_from_output(p, o)
+    def print_prompts_and_output(m, p, o):
+        result = result_from_output(m, p, o)
         star_20 = '*' * 20
+        print(star_20)
+        print(tuple(result))
         output_string = f"""{result.prompt}
 
         
-        {star_20}{result.title}{star_20}{result.title}{star_20}
+        {star_20}{result.title}{star_20}{result.prompt_type}{star_20}
         
         {p.text}
         
@@ -108,12 +104,17 @@ def load_and_infer_with_model(model_name, seed, prompts, dataset):
         print(output_string)
         return result
 
+    prompts = dataset["prompt"]
     outputs = model.infer(prompts)
+
     # Collate data and outputs
-    def collate_data_and_outputs(dataset, outputs):
-        for d, o in zip(dataset, outputs):
-            print_prompts_and_output(d[["prompt", "title", "prompt_type"]], o)
-    collate_data_and_outputs(dataset, outputs)
+    def collate_data_and_outputs(model_name, dataset, outputs):
+        print(f"Dataset : {len(dataset)} {len(outputs)}")
+        # TODO batched processing
+        for i in range(len(dataset)):
+            print_prompts_and_output(model_name, dataset[i], outputs[i])
+
+    collate_data_and_outputs(model_name, dataset, outputs)
 
     del model
     cleanup()
@@ -126,13 +127,24 @@ def hf_auth_check(model_list):
     for model in model_list:
         auth_check(model)
 
+
+def test(seed):
+    prompts_dataset = Dataset.from_dict(get_dataset_for_coverage_questions()[:2])
+    for model_name in model_list[:1]:
+        load_and_infer_with_model(model_name, seed, prompts_dataset)
+
 def main(seed):
-    prompts_dataset = get_yes_or_no_vague_contracts()["test"]
+    prompts_dataset = get_dataset_for_coverage_questions()
     for model_name in model_list:
         load_and_infer_with_model(model_name, seed, prompts_dataset)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--test", default=False, action="store_true")
     args = parser.parse_args()
+    if args.test:
+        test(args.seed)
+        exit(1)
+
     main(args.seed)
