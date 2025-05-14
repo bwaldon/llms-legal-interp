@@ -45,12 +45,6 @@ model_list = [
     "bigscience/bloom-7b1"
 ]
 
-
-def cleanup():
-    torch.cuda.empty_cache()
-    gc.collect()
-
-
 def get_prompts():
     return [
         MetaLinguisticPrompt(topic="landscaping", features=["question", "bool"]),
@@ -77,7 +71,13 @@ def get_prompts():
 
 
 def load_and_infer_with_model(model_name, seed, dataset):
+    def model_cleanup():
+        torch.cuda.empty_cache()
+        gc.collect()
+
+
     print(model_name + "\n")
+
     model = MetaLinguisticJudgement(model_name, seed)
     prompts = dataset["prompt"]
     outputs = model.infer(prompts)
@@ -99,16 +99,12 @@ def load_and_infer_with_model(model_name, seed, dataset):
             "output_text": [output.text for output in outputs],
             "cum_logprob": [output.cumulative_logprob for output in outputs]
         }
-        results = Dataset.from_dict(results_dict)
-        return results
 
-    results = collate_data_and_outputs(model_name, dataset, outputs)
-    print(results)
-    # TODO Fix: using fixed path
-    results.to_csv(f"runs/{model_name}-results.csv", index=False)
+        return results_dict
 
     del model
-    cleanup()
+    model_cleanup()
+    return collate_data_and_outputs(model_name, dataset, outputs)
 
 # class OutputType(Enum):
 #     TEXT = "text"
@@ -130,7 +126,14 @@ def main(seed):
     print(prompts_dataset)
     for model_name in tqdm(model_list, desc="For models"):
         print("Running with model:", model_name)
-        load_and_infer_with_model(model_name, seed, prompts_dataset)
+        results_dict = load_and_infer_with_model(model_name, seed, prompts_dataset)
+        # TODO see if we should just make it pyarrow
+        results = Dataset.from_dict(results_dict)
+        print(f"For {model_name} results :{results}")
+        results.to_csv(f"runs/{model_name}-results.csv", index=False)
+        del results
+        del results_dict
+        gc.collect()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
