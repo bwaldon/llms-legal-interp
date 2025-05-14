@@ -1,12 +1,14 @@
 import argparse
 
 import gc
+import string
 from collections import namedtuple
-import torch
+import re
 import random
 import numpy as np
 
 from huggingface_hub import auth_check
+import torch
 
 from prompts import get_dataset_for_coverage_questions
 from model import MetaLinguisticPrompt, MetaLinguisticJudgement
@@ -69,61 +71,33 @@ def get_prompts():
     prompt = MetaLinguisticPrompt(topic="landscaping", features=["question", "bool"])
     model = MetaLinguisticJudgement("meta-llama/Llama-3.2-1B", 42)
     model.infer([prompt])
-    
-"""
+    """
+
+
 def load_and_infer_with_model(model_name, seed, dataset):
     print(model_name + "\n")
     model = MetaLinguisticJudgement(model_name, seed)
-
-    def result_from_output(model_name, prompt, output):
-        PromptResult = namedtuple('PromptResult', ['prompt', 'title', 'prompt_type',  'output', 'output_prob', 'output_token_probs', 'token_probs'])
-        return PromptResult(prompt['prompt'], prompt['title'], prompt['prompt_type'], output.text, output.cumulative_logprob,  output.logprobs, None)
-
-    def print_prompts_and_output(m, p, o):
-        result = result_from_output(m, p, o)
-        star_20 = '*' * 20
-        print(star_20)
-        print(tuple(result))
-        output_string = f"""{result.prompt}
-
-        
-        {star_20}{result.title}{star_20}{result.prompt_type}{star_20}
-        
-        {p.text}
-        
-        {result.output}
-        
-        {result.output_prob}
-        """
-        # output_string += f"{star_20}{p.topic}{star_20}{p.nudge}{star_20}"
-        # output_string += "\n\n"
-        # output_string += p.text
-        # output_string += "\n\n"
-        # output_string += o
-        # output_string += "\n\n\n"
-        print(output_string)
-        return result
-
     prompts = dataset["prompt"]
     outputs = model.infer(prompts)
+
+    # https://stackoverflow.com/questions/43647186/tokenize-based-on-white-space-and-trailing-punctuation
+    def extract_first_token(text):
+        return [x.strip("\"'") for x in re.split(r"([.,!?]+)?\s+", text) if x][0]
 
     # Collate data and outputs
     def collate_data_and_outputs(model_name, dataset, outputs):
         print(f"Dataset : {len(dataset)} {len(outputs)}")
         # TODO batched processing
-        results = {
+        results_dict = {
             "title": dataset["title"],
             "prompt_type": dataset["prompt_type"],
             "prompt": dataset["prompt"],
             "version": dataset["version"],
+            "output": [extract_first_token(output.text) for output in outputs],
             "output_text": [output.text for output in outputs],
             "cum_logprob": [output.cumulative_logprob for output in outputs]
         }
-
-        for d, o in zip(dataset, outputs):
-            print_prompts_and_output(model_name, d, o)
-
-        results = Dataset.from_dict(results)
+        results = Dataset.from_dict(results_dict)
         return results
 
     results = collate_data_and_outputs(model_name, dataset, outputs)
@@ -150,6 +124,8 @@ def test(seed):
 
 def main(seed):
     prompts_dataset = get_dataset_for_coverage_questions()
+    print("Using the following dataset:")
+    print(prompts_dataset)
     for model_name in model_list:
         load_and_infer_with_model(model_name, seed, prompts_dataset)
 
