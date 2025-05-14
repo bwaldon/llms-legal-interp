@@ -114,6 +114,8 @@ def load_and_infer_with_model(model_name, seed, dataset):
         results = {
             "title": dataset["title"],
             "prompt_type": dataset["prompt_type"],
+            "prompt": dataset["prompt"],
+            "version": dataset["version"],
             "output_text": [output.text for output in outputs],
             "cum_logprob": [output.cumulative_logprob for output in outputs]
         }
