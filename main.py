@@ -169,6 +169,9 @@ def main(seed):
         results = Dataset.from_dict(results_dict)
         print(f"For {model_name} results :{results}")
         results.to_csv(f"runs/{model_name}-results.csv", index=False)
+        del results
+        del results_dict
+        gc.collect()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
