@@ -7,6 +7,8 @@ import re
 import random
 import numpy as np
 
+from tqdm import tqdm
+
 from huggingface_hub import auth_check
 import torch
 
@@ -82,7 +84,7 @@ def load_and_infer_with_model(model_name, seed, dataset):
 
     # https://stackoverflow.com/questions/43647186/tokenize-based-on-white-space-and-trailing-punctuation
     def extract_first_token(text):
-        return [x.strip("\"'\.") for x in re.split(r"([a-zA-z]+)?\s+", text) if x][0]
+        return [x.strip("\"'\.!") for x in re.split(r"([a-zA-z]+)?\s+", text) if x][0]
 
     # Collate data and outputs
     def collate_data_and_outputs(model_name, dataset, outputs):
@@ -126,7 +128,8 @@ def main(seed):
     prompts_dataset = get_dataset_for_coverage_questions()
     print("Using the following dataset:")
     print(prompts_dataset)
-    for model_name in model_list:
+    for model_name in tqdm(model_list, desc="For models"):
+        print("Running with model:", model_name)
         load_and_infer_with_model(model_name, seed, prompts_dataset)
 
 if __name__ == "__main__":
