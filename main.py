@@ -111,10 +111,23 @@ def load_and_infer_with_model(model_name, seed, dataset):
     def collate_data_and_outputs(model_name, dataset, outputs):
         print(f"Dataset : {len(dataset)} {len(outputs)}")
         # TODO batched processing
-        for i in range(len(dataset)):
-            print_prompts_and_output(model_name, dataset[i], outputs[i])
+        results = {
+            "title": dataset["title"],
+            "prompt_type": dataset["prompt_type"],
+            "output_text": [output.text for output in outputs],
+            "cum_logprob": [output.cumulative_logprob for output in outputs]
+        }
 
-    collate_data_and_outputs(model_name, dataset, outputs)
+        for d, o in zip(dataset, outputs):
+            print_prompts_and_output(model_name, d, o)
+
+        results = Dataset.from_dict(results)
+        return results
+
+    results = collate_data_and_outputs(model_name, dataset, outputs)
+    print(results)
+    # TODO Fix: using fixed path
+    results.to_csv(f"runs/{model_name}-results.csv", index=False)
 
     del model
     cleanup()
