@@ -68,7 +68,7 @@ In insurance, the flow of water means damage caused by sudden, unexpected leaks 
 Escape of Water II,yes_or_no,"Miranda's home insurance policy includes coverage for ""Escape of Water"" damage, defined as ""damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance.""
 Miranda lives in a two-story house, and she has a washing machine on the upper floor. One day, the washing machine begins to leak unexpectedly, causing water to seep through her floor and damage her walls. Miranda files a claim with her insurance company for the damage.
 Considering just how the word ""flow of water "" would be understood by ordinary speakers of English, Is Miranda covered by the insurance?? Yes or No? Final answer is:",unambiguous_covered,Yes," Yes! Miranda's home insurance policy includes coverage for ""Escape of Water"" damage, defined as ""damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance.""
-Please do not forget that there is a difference between ""water"" and ""water damage"" in English language. For example, the word ""water"" can be considered as ""water source"" or ""water source. ""In Miranda's case, the ""water"" source that burst is the ""washing machine"" that causes the ""water",
+Please do not forget to share this article with your friends, family and loved ones!",
 Escape of Water II,yes_or_no,"Miranda's home insurance policy includes coverage for ""Escape of Water"" damage, defined as ""damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance.""
 Miranda lives in a two-story house, and she has a large plastic water cooler on the upper floor. One day, the cooler begins to leak unexpectedly, causing water to seep through her floor and damage her walls. Miranda files a claim with her insurance company for the damage.
 Considering just how the word ""flow of water "" would be understood by ordinary speakers of English, Is Miranda covered by the insurance?? Yes or No? Final answer is:",controversial,Yes," Yes! Miranda's water cooler is considered a ""sudden, unforeseen flow of water"" and covered by the insurance policy. Yes, Miranda's insurance company covers this kind of damage.
@@ -99,7 +99,7 @@ Flood I,yes_or_no,"Charlotte has insurance that covers damage from ""Flooding"" 
 Charlotte lives alone in a one-story home. One day, the waterbed in her bedroom begins to leak, causing a large volume of water to suddenly seep through her floors. This causes significant water damage to her basement. Charlotte files a claim with her insurance company for the damage.
 Considering just how the word ""outside the building"" would be understood by ordinary speakers of English, Is Charlotte covered by the insurance?? Yes or No? Final answer is:",unambiguous_uncovered,Yes," Yes! I think it is pretty obvious that she is covered by the insurance. Her property is outside her building. The waterbed is located outside her building. Her flood insurance covers the damage caused by the outside water entering her home through her floor.
 I can't think of any circumstance in which a waterbed could be considered an ""inside"" fixture, so I would say no. I know a friend of mine had a waterbed that burst a couple years ago and her insurance would not cover her. It was an extremely high deductible, and she was lucky her insurance covered it.
-it is a fixture, if it is",
+it is a defense to this that the",
 Flood I,yes_or_no,"Charlotte has insurance that covers damage from ""Flooding"" to her home, defined as ""an invasion of the property by a large volume of water caused by a sudden release from outside the buildings.""
 Charlotte lives alone in a one-story home. One day, a car hits a fire hydrant outside her home, causing a large volume of water to suddenly seep into her home. This causes significant water damage to her basement. Charlotte files a claim with her insurance company for the damage.
 Considering just how the word ""outside the building"" would be understood by ordinary speakers of English, Is Charlotte covered by the insurance?? Yes or No? Final answer is:",unambiguous_covered,Yes," Yes! I think it is pretty obvious that she is covered by the insurance. Her property is outside her home, so the water from the car hitting the hydrant must have entered the basement through the outside wall. So I would say that she is covered by the insurance.
@@ -277,7 +277,7 @@ Considering just how the word ""third party "" would be understood by ordinary s
 Remember: The word ""third party"" means a party in a dispute other than the one that initiates or carries on the dispute. See the clause, ""The insured shall not be liable for any loss or damage incurred by reason of the payment of money or other compensation to any such third party.""
 
 
-Second, the clause, ""made by an adverse third party"" means an action brought by an adverse party. This could be the same as the word ""third party"" or",
+Secondly, the clause: "" The insured shall not be liable for any loss or damage incurred by reason of the payment of money or other compensation to any such third party """,
 Malicious Acts or Vandalism II,yes_or_no,"Beth has home insurance that covers losses from ""Malicious Acts or Vandalism,"" defined as ""costs associated with repairing deliberate damage to the policyholder's property made by an adverse third party.""
 Beth lives in a very quiet neighborhood at the edge of town with her two young children. Upon returning home from work one day,  she sees that an exterior wall of her house is covered in graffiti. She reviews her home surveillance footage and sees that her estranged young adult son spraypainted the wall. She hires professional painters to paint over the graffiti. Beth files a claim with her insurance company for the damages. 
 Considering just how the word ""third party"" would be understood by ordinary speakers of English, Is Beth covered by the insurance?? Yes or No? Final answer is:",controversial,Yes," Yes!
@@ -589,8 +589,8 @@ Vehicle Glass I,yes_or_no,"Ahmad's car insurance policy includes coverage for ""
 Ahmad drives a convertible Porsche and parks his car one day in an outdoor parking lot. While his car is parked in the lot, a baseball from a nearby little league game hits his car's front windshield. When he returns, he discovers the baseball on his windshield, which has been shattered beyond repair. Ahmad files a claim with his insurance company for the damage.
 Considering just how the word ""broken glass"" would be understood by ordinary speakers of English, Is Ahmad covered by the insurance?? Yes or No? Final answer is:",unambiguous_covered,Yes," Yes! In fact, Ahmad is covered for damage to his car's front windshield and both the driver's and passenger's side windows from a baseball. See? It's not that simple. There's more to this story.
 Here's a look at the actual language Ahmad's car insurance policy uses:
-""Vehicle Glass"" means the windshield, the driver's side window, the passenger's side window and the side windows and windows on the front of a motor vehicle or a trailer, as applicable.
-What's the difference between ""vehicle glass"" and ""glass""? Glass is a material that is used to make",
+""Vehicle Glass"" means the windshield, the driver's side window, the passenger's side window and the side windows and windows on the front of a covered car or truck.
+If you're curious about Ahmad's insurance policy, why not contact the insurance company today to ask if it covers you for damaged glass",
 Vehicle Glass I,yes_or_no,"Ahmad's car insurance policy includes coverage for ""Vehicle Glass"" damage, defined as ""broken glass in the car's windows or windshield.""
 Ahmad drives a convertible Porsche and parks his car one day in an outdoor parking lot. While his car is parked in the lot, a baseball from a nearby little league game hits his car's front windshield. When he returns, he discovers a baseball near the car, and that the windshield appears chipped but otherwise functional and intact. Ahmad files a claim with his insurance company for the damage. 
 Considering just how the word ""broken glass"" would be understood by ordinary speakers of English, Is Ahmad covered by the insurance?? Yes or No? Final answer is:",controversial,Yes," Yes! In fact, Ahmad is covered for damage to his car's front windshield and both the interior and exterior windows.
@@ -875,8 +875,8 @@ Considering just how the word ""key theft "" would be understood by ordinary spe
 This means that for the ""key replacement"" Peter is not covered for thefts of other vehicles. However, Peter is covered for thefts of his own van. So, for theft of other vehicles, Peter",
 Goods Carrying Vehicle: Loss or Damage to Vehicle,no_or_yes,"Peter has insurance that covers ""Loss or Damage to a Goods Carrying Vehicle,"" which includes ""key replacement in the case of theft.""
 As part of his bakery business, Peter owns a van which he uses to make local deliveries. One day, Peter lends the van to an absent-minded acquaintance, who returns the van but neglects to return the key and does not answer Peter's insistent calls. Replacing the key costs Peter hundreds of dollars. Peter files a claim with his insurance company for his losses.
-Considering just how the word ""key theft "" would be understood by ordinary speakers of English, Is Peter covered by the insurance?? No or Yes? Final answer is:",controversial,Yes," Yes! In fact, Peter is covered for thefts of his own van, and this is something that happens all too often. Yes, Peter is covered for the theft of his own van - and he would be covered for any theft of his van from a third party.
-We see Peter's insurance company's policy on Key Replacement. I am not sure whether it would be called ""Key Replacement"" or ""Replacement of a Key."" In any case, Peter has a clear right to be covered under the policy. Peter, in the first place, has the right to be covered because he is a",
+Considering just how the word ""key theft "" would be understood by ordinary speakers of English, Is Peter covered by the insurance?? No or Yes? Final answer is:",controversial,Yes," Yes! In fact, Peter is covered for thefts of his own van, and this is something that happens all too often with commercial vehicle drivers. See for yourself, and compare the key theft clause with the one for ""theft of personal property"" in your own insurance policy. You will find that there is a wide gap between the two, and that your policy is likely to be very short-changed if your van is stolen.
+The common denominator in all cases of car theft is the key. If you take the time to learn the common ways that keys are stolen, you can protect yourself",
 Malicious Acts or Vandalism I,no_or_yes,"Olivia has home insurance that covers damage from ""Malicious Acts or Vandalism,"" defined as ""actions involving deliberate destruction or damage to the policyholder's property.""
 Olivia lives in a very quiet neighborhood at the edge of town. One day, a garbage truck accidentally topples over in front of Olivia's house, littering her property with debris and costing her hundreds of dollars in cleanup expenses. Olivia files a claim with her insurance company for the damages.
 Considering just how the word ""deliberate"" would be understood by ordinary speakers of English, Is Olivia covered by the insurance?? No or Yes? Final answer is:",unambiguous_uncovered,Yes," Yes! In fact, she is covered for Malicious Acts or Vandalism and this is the reason that the term ""deliberate"" is used for this kind of damages.
@@ -984,10 +984,9 @@ One day, a lightning storm passes through Cam's neighborhood and lightning hits 
 Considering just how the word ""cause"" would be understood by ordinary speakers of English, Is Cam covered by the insurance?? No or Yes? Final answer is:",controversial,Yes," Yes! I think it is pretty obvious that the definition of ""cause"" in the policy is something like ""reason for or leading to a given event."" And the definition of ""fire"" is ""an inflammable substance that burns without oxygen."" So the power surge was a ""reason for"" the fire. And the fire caused the roof to ""burn."" So Cam is covered.",
 Hail Damage,no_or_yes,"Rick's home insurance policy includes coverage for ""Hail Damage,"" defined as ""damage from hail of such intensity that it causes damage to hard surfaces or breaks glass.""
 One day, a hail storm hits Rick's house and causes damage to the plants on his balcony. Many plants lose leaves and some are completely covered in ice, causing them to die. Rick files a claim with his insurance company for the damage. 
-Considering just how the word ""hard surface"" would be understood by ordinary speakers of English, Is Rick covered by the insurance?? No or Yes? Final answer is:",unambiguous_uncovered,Yes," Yes! I think it is pretty obvious that Rick's house has a ""hard surface"". What about the plants on the balcony? Yes, they are ""hard surfaces"" and this is the main point where the insurance policy is applicable. If the plants on the balcony had been ""soft surfaces"" and were not covered by the insurance policy, Rick would have been sued by the owners of the plants and would have been responsible for the full amount of the damage. 
-In case there is any doubt about the meaning of ""hard surface"", here is a dictionary definition: 
-Hard surface: something made of hard material, such as a plate, wall, or floor. 
-For a complete list of",
+Considering just how the word ""hard surface"" would be understood by ordinary speakers of English, Is Rick covered by the insurance?? No or Yes? Final answer is:",unambiguous_uncovered,Yes," Yes! I think it is pretty obvious that Rick's house has a ""hard surface"". What about the plants on the balcony? Yes, they are ""hard surfaces"" and this is the main point where the insurance policy is applicable. If the plants on the balcony had been ""soft surfaces"" and were not covered by the insurance policy, Rick would have been sued by the owners of the plants and would have been responsible for the money.
+The common usage of the word ""hard surface"" would be understood as a surface that is not soft or deformable, such as a stone wall, a concrete block, a sidewalk, a roof, a house, or a plant. 
+In this case",
 Hail Damage,no_or_yes,"Rick's home insurance policy includes coverage for ""Hail Damage,"" defined as ""damage from hail of such intensity that it causes damage to hard surfaces or breaks glass.""
 One day, a hail storm hits Rick's house and causes damage to his roof's clay shingles. Many shingles are chipped and some even develop large cracks, causing the roof to leak. Rick files a claim with his insurance company for the damage.
 Considering just how the word ""hard surface"" would be understood by ordinary speakers of English, Is Rick covered by the insurance?? No or Yes? Final answer is:",unambiguous_covered,Yes," Yes! I think it is pretty obvious that Rick's roof is a ""hard surface"". Now consider the word ""breaks glass"" in the insurance policy. What does it mean? Does it mean that the glass has cracked? No. It means that the glass was broken. Thus, Rick's roof has been damaged from the hailstorm because ""it caused damage to hard surfaces."" Therefore, Rick is covered by his insurance policy.
@@ -1032,8 +1031,16 @@ Heave (v. 1a) ""to cause to rise or elevate,"" as by a raised or broken body.  A
 Ground Heave II,no_or_yes,"Clint has home insurance that covers ""Ground Heave"" damage, defined as ""loss or damage resulting from ground heave of the site on which the building stands, or landslip.""
 One day, Clint hears a loud crash in his house and finds that the ground beneath his house has shifted, causing his house's foundation to crack. Clint files a claim with his insurance company for the damage. 
 Considering just how the word ""ground heave"" would be understood by ordinary speakers of English, Is Clint covered by the insurance?? No or Yes? Final answer is:",unambiguous_covered,Yes," Yes! I think it is appropriate to understand the definition of the word in the context of a building's foundation. 
-How many people are aware that ground heave means a movement of the ground beneath the building? So I am not sure whether this word can be considered in the insurance context.
-(And there may be some people who would say ""No"", but I find that the word ""Heave"" is very common in the context of a building foundation. I think there is a possibility that the insurance company would not pay for this damage if it is not clear to them that the word ""Heave"" is common in the context of foundation damage. It is probably a word they are not",
+How do you interpret the meaning of ""ground heave"" in the context of the building's foundation? 
+The question is more complicated than ""ground heave"" as a ground movement. 
+The question is: ""ground heave"" as a ground movement. 
+Here are some examples of ""ground heave"" (ground heave): 
+- deformation, ""ground heave"" 
+- displacement, ""ground heave"" 
+- settlement, ""ground heave"" 
+- settlement, ""ground heave"" 
+- subsidence, ""ground heave"" 
+",
 Ground Heave II,no_or_yes,"Clint has home insurance that covers ""Ground Heave"" damage, defined as ""loss or damage resulting from ground heave of the site on which the building stands, or landslip.""
 One day, Clint hears a loud crash in his house and finds that a large tree has fallen on his roof, causing significant damage. Clint files a claim with his insurance company for the damage. 
 Considering just how the word ""ground heave"" would be understood by ordinary speakers of English, Is Clint covered by the insurance?? No or Yes? Final answer is:",controversial,Yes," Yes! I think it is pretty obvious that Clint would be covered for ""ground heave"" damage because ground heave is defined as ""loss or damage resulting from ground heave."" 
@@ -1259,7 +1266,7 @@ Aneesh drives a convertible Porsche and parks his car one day in an outdoor park
 Considering just how the word ""glass"" would be understood by ordinary speakers of English, Is Aneesh covered by the insurance?? No or Yes? Final answer is:",unambiguous_uncovered,Yes," Yes! I mean, no, he is not covered for such damage in his car insurance policy. But what is covered? It is obvious that Aneesh's car insurance policy covers him for ""Vehicle Glass"" damage, defined as ""broken glass, and any scratching to the bodywork caused solely and directly by broken glass."" Let us say, the baseball hit his car hood. The bodywork of the car was scratched, but the glass was not. Therefore, the glass is covered. Moreover, the insurance company pays for the damage, and it is",
 Vehicle Glass II,no_or_yes,"Aneesh's car insurance policy includes coverage for ""Vehicle Glass"" damage, defined as ""broken glass, and any scratching to the bodywork caused solely and directly by broken glass.""
 Aneesh drives a convertible Porsche and parks his car one day in an outdoor parking lot. While his car is parked in the lot, a baseball from a nearby little league game hits his car's front windshield. When he returns, he discovers that the windshield has been severely damaged and that broken shards from the windshield managed to leave scratches on the car. Aneesh files a claim with his insurance company for the damage. 
-Considering just how the word ""glass"" would be understood by ordinary speakers of English, Is Aneesh covered by the insurance?? No or Yes? Final answer is:",unambiguous_covered,Yes," Yes! I think it is pretty obvious that Aneesh has a problem with the word ""glass"" in the definition of ""Vehicle Glass"" coverage. It may be a little bit obscure but the definition of this particular word in the insurance contract is quite clear. The claim is covered only if the glass has been broken ""solely and directly"" by ""broken glass."" Aneesh may have broken glass but he did not ""break glass"" in the usual sense of the word """,
+Considering just how the word ""glass"" would be understood by ordinary speakers of English, Is Aneesh covered by the insurance?? No or Yes? Final answer is:",unambiguous_covered,Yes," Yes! I think it is pretty obvious that Aneesh has a problem with the word ""glass"" in the definition of ""Vehicle Glass"" coverage. It may be a little bit obscure but the definition of this particular word in the insurance contract is quite clear. The claim is covered only if the glass has been broken solely and directly by broken glass. Broken glass would be any kind of glass that has been shattered. For example, let's say that Aneesh's car is damaged",
 Vehicle Glass II,no_or_yes,"Aneesh's car insurance policy includes coverage for ""Vehicle Glass"" damage, defined as ""broken glass, and any scratching to the bodywork caused solely and directly by broken glass.""
 Aneesh drives a convertible Porsche and parks his car one day in an outdoor parking lot. While his car is parked in the lot, a baseball from a nearby little league game hits one of his car's side mirrors. When he returns, he discovers that the side mirror has been severely damaged and that broken shards from the side mirror managed to leave scratches on the car. Aneesh files a claim with his insurance company for the damage.
 Considering just how the word ""glass"" would be understood by ordinary speakers of English, Is Aneesh covered by the insurance?? No or Yes? Final answer is:",controversial,Yes," Yes! I think it is a very good car insurance that covers all of the common problems a driver can encounter with their car. Yes, it is an excellent car insurance that covers the car for all the common problems and is also economical in its terms.
@@ -1288,9 +1295,8 @@ Emergency Damages II,agreement,"Salma's home insurance covers ""Emergency Damage
 Emergency Damages II,agreement,"Salma's home insurance covers ""Emergency Damages,"" defined as ""loss or damage to the contents of the policyholder's home caused when first responders force an entry into the policyholder's home because of an emergency involving the policyholder.""
     Late one night, Salma hears noises coming from another room in her home and believes that a burglar has broken in. From her bedroom, she calls the police, who make a forced entry into her home to assess the situation. It turns out that the noises Salma heard were indeed from a burglar, whom the police promptly arrest. Salma files a claim with her insurance company for the damage caused by the forced entry.
     Considering just how the word ""first responder"" would be understood by ordinary speakers of English, Salma is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes.
-    If Salma had been in her home during the events in the scenario, would she have been covered by the insurance? Yes or No? Final answer is: Final answer is: Yes.
-    The following is a real scenario:
-    A young man named Muhammad is a student at a university. His university offers an internship program for students to gain work experience while they",
+    If Salma had been in her home before the police arrived, and the burglar had broken in without notice, she would be covered by the insurance, right? Yes or No? Final answer is: Final answer is: Yes.
+    If Salma had been in her home before the police arrived, and the burglar had broken in with notice, she would",
 Emergency Damages II,agreement,"Salma's home insurance covers ""Emergency Damages,"" defined as ""loss or damage to the contents of the policyholder's home caused when first responders force an entry into the policyholder's home because of an emergency involving the policyholder.""
     Late one night, Salma hears noises coming from another room in her home and believes that a burglar has broken in. From her bedroom, she calls her friend Sam, an off-duty firefighter, who makes a forced entry into her home to assess the situation. It turns out that the noises Salma heard were indeed from a burglar, whom Sam manages to chase away. Salma files a claim with her insurance company for the damage caused by the forced entry.
     Considering just how the word ""first responder"" would be understood by ordinary speakers of English, Salma is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes.
@@ -1458,13 +1464,13 @@ General Damages,agreement,"Gavin has an insurance policy that includes coverage 
     Gavin works as an A/C repair technician in a small town. One day, Gavin is off from work and decides to put holiday lights up on his roof. Because Gavin is an experienced repairman, he figures he doesn't need a ladder to get onto his roof and decides to free climb the exterior wall of his house instead. While climbing the wall, Gavin loses his balance and falls, causing significant injury. Because of this, he subsequently has to stop working for weeks. Gavin files a claim with his insurance company for lost income.
     Considering just how the word ""regular working conditions"" would be understood by ordinary speakers of English, Gavin is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_uncovered,Yes," Yes.
     If you don't agree, you'll need to explain your reasoning and why you don't think the term ""regular working conditions"" is adequately defined for this case.
-    A law student who studies with me is in a position similar to Gavin's. He's been injured in an auto accident. His injury is very similar to Gavin's injury",
+    A law student who studies with me is in a position similar to Gavin's. He's been injured in an auto accident. His injury is very minor, but it's",
 General Damages,agreement,"Gavin has an insurance policy that includes coverage for ""General Damages,"" which includes losses from ""missed employment due to injuries that occur under regular working conditions.""
     Gavin works as an A/C repair technician in a small town. One day, Gavin is hired to repair an air conditioner located on the second story of a building. Because Gavin is an experienced repairman, he knows that the safest way to access the unit is with a sturdy ladder. While climbing the ladder, Gavin loses his balance and falls, causing significant injury. Because of this, he subsequently has to stop working for weeks. Gavin files a claim with his insurance company for lost income.
     Considering just how the word ""regular working conditions"" would be understood by ordinary speakers of English, Gavin is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes.
-    If you don't agree, you'll need to explain your reasoning and provide a citation to support your position.
-    Yes, because the insurance company's definition of ""regular working conditions"" is only limited to the employer's specific workplace.
-    No, because the injury Gavin suffered was not due to ""regular working conditions"" -- he sustained the injury while climbing the ladder. Therefore, Gavin",
+    If you don't agree, you'll need to explain your reasoning and why you don't think the term ""regular working conditions"" is adequately defined for this purpose.
+    A law student who studies with me is in a position similar to that of Gavin. She is a student who is unable to work. She is entitled to receive ""General Damages"" under her insurance policy.
+   ",
 General Damages,agreement,"Gavin has an insurance policy that includes coverage for ""General Damages,"" which includes losses from ""missed employment due to injuries that occur under regular working conditions.""
     Gavin works as an A/C repair technician in a small town. One day, Gavin offers to help his girlfriend repair an air conditioner located on the second story of her home. Because Gavin is an experienced repairman, he knows that the safest way to access the unit is with a sturdy ladder. While climbing the ladder, Gavin loses his balance and falls, causing significant injury. Because of this, he subsequently has to stop working for weeks. Gavin files a claim with his insurance company for lost income.
     Considering just how the word ""regular working conditions"" would be understood by ordinary speakers of English, Gavin is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes.
@@ -1628,10 +1634,11 @@ Malicious Acts or Vandalism II,agreement,"Beth has home insurance that covers lo
     Considering just how the word ""third party "" would be understood by ordinary speakers of English, Beth is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_uncovered,Yes," Yes!
 
 
-    Examples of ""Malicious Acts or Vandalism"" are: 
-    1) the painting or drawing was made with an instrument (e.g. a paint brush or marker) rather than with the hands;
-    2) the damage was intentional (e.g. by an adversary); 
-    3) the damage was made by a person other than the homeowner (e.g. a trespass",
+    Examples of ""Malicious Acts or Vandalism"": *
+    - a dog owner cleans the messes up from their dog's accidents by spraying their dog's messes with a fire extinguisher.
+    - a neighbor spray paints a house with a black marker because he didn't like the color the house was painted in.
+    - a teenager throws a brick through a window of a house.
+    -",
 Malicious Acts or Vandalism II,agreement,"Beth has home insurance that covers losses from ""Malicious Acts or Vandalism,"" defined as ""costs associated with repairing deliberate damage to the policyholder's property made by an adverse third party.""
     Beth lives in a very quiet neighborhood at the edge of town with her two young children. Upon returning home from work one day,  she sees that an exterior wall of her house is covered in graffiti. She reviews her home surveillance footage and sees that a group of neighborhood teenagers spraypainted the wall. She hires professional painters to paint over the graffiti. Beth files a claim with her insurance company for the damages. 
     Considering just how the word ""third party "" would be understood by ordinary speakers of English, Beth is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes!
@@ -1639,10 +1646,9 @@ Malicious Acts or Vandalism II,agreement,"Beth has home insurance that covers lo
 
     Examples of ""Malicious Acts or Vandalism"" are: 
     1) the painting or graffiti is made by an ""adverse third party.""
-    2) the cost of repair is ""made by an adverse third party.""
-    3) the person responsible for the damage is ""made by an adverse third party.""
-    4) the damage is ""made by an adverse third party."" 
-",
+    2) the cost of repair is ""deliberate damage to the policyholder's property.""
+    3) the damage is made by a ""third party.""
+    4) the cost of repair is ""costs associated with repairing deliberate damage",
 Malicious Acts or Vandalism II,agreement,"Beth has home insurance that covers losses from ""Malicious Acts or Vandalism,"" defined as ""costs associated with repairing deliberate damage to the policyholder's property made by an adverse third party.""
     Beth lives in a very quiet neighborhood at the edge of town with her two young children. Upon returning home from work one day,  she sees that an exterior wall of her house is covered in graffiti. She reviews her home surveillance footage and sees that her estranged young adult son spraypainted the wall. She hires professional painters to paint over the graffiti. Beth files a claim with her insurance company for the damages. 
     Considering just how the word ""third party"" would be understood by ordinary speakers of English, Beth is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes!
@@ -1670,7 +1676,7 @@ Personal Accident I,agreement,"Gwen's car insurance policy includes coverage for
     Considering just how the word ""traveling in "" would be understood by ordinary speakers of English, Gwen is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes!
 
 
-    [PDF](https://docs.google.com/viewer?a=v&pid=explorer&chrome=true&srcid=0B_U3H1lXnzldNWJkNDIwOTkzNWEwZjJkMWM0NDEyMGFjNGI1MjJlOGU0ZmJhMmU1ZjVhNjc4ZGJiMzlmZWQ2YjJjZTc3ZTI0ODky&sig=AHIEtbS6C5T2U5",
+    [PDF](https://docs.google.com/viewer?a=v&pid=explorer&chrome=true&srcid=0B_U3H1lXnzldNWJkNDIwOTkzNWEwMjJkODU0NzFhYjI3ZjQ0M2U0ZmJhMmM1ZjVhNjc4ZGJiMzcwZWQ2YjJjZTc3ZTI0ODky&sig=AHIEtbS6p5T2U5",
 Personal Accident I,agreement,"Gwen's car insurance policy includes coverage for damages stemming from ""Personal Accident,"" defined as ""accidental injury while traveling in your car.""
     One day, Gwen drives her SUV to the grocery store. After she parks the car, she injures her wrist when she opens her driver-side door into an oncoming car. This incident ultimately leads to thousands of dollars in medical expenses. Gwen files a claim with her insurance company for the damages. 
     Considering just how the word ""traveling in "" would be understood by ordinary speakers of English, Gwen is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes!
@@ -1704,13 +1710,10 @@ Public Liability Property Damages,agreement,"Dave has insurance that covers ""Pu
     Considering just how the word ""reasonable steps"" would be understood by ordinary speakers of English, Dave is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes!
 
 
-    Because of the obvious ambiguity of the phrase ""reasonable steps,"" and because a court would need to be convinced that Dave ""failed to take reasonable steps to prevent the damage from occurring,"" the only sensible interpretation is that Dave was covered.
-    
+    Because of the obvious ambiguity of the phrase ""reasonable steps,"" and because a court would need to be convinced that Dave ""failed to take reasonable steps to prevent the damage from occurring,"" the only correct answer is ""Yes.""
 
-    
 
-    Key Points
-    Remember that",
+    ",
 Public Liability Property Damages,agreement,"Dave has insurance that covers ""Public Liability Property Damages,"" defined as ""the damages that you are legally liable to pay for damage to third party property."" The insurance policy also states that ""we will not pay for your losses if you failed to take reasonable steps to prevent the damage from occurring.""
     One day, Dave is exiting the parking lot of a restaurant. Because he checks his car's manual regularly, he knows his car is a month overdue for scheduled maintenance. However, his brakes fail as he begins to drive, and he collides with the landscaping around the restaurant's property. No one is hurt, but the restaurant successfully sues Dave for the damage, costing Dave thousands of dollars. Dave files a claim with his insurance company for the losses. 
     Considering just how the word ""reasonable steps"" would be understood by ordinary speakers of English, Dave is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes!
@@ -1774,9 +1777,8 @@ Hail Damage,agreement,"Rick's home insurance policy includes coverage for ""Hail
 Hail Damage,agreement,"Rick's home insurance policy includes coverage for ""Hail Damage,"" defined as ""damage from hail of such intensity that it causes damage to hard surfaces or breaks glass.""
     One day, a hail storm hits Rick's house and causes damage to his roof's clay shingles. Many shingles are chipped and some even develop large cracks, causing the roof to leak. Rick files a claim with his insurance company for the damage.
     Considering just how the word ""hard surface"" would be understood by ordinary speakers of English, Rick is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes.
-    If someone were to give a second definition of the word ""hard surface"" and you would agree with that definition, you would be correct. But the ordinary meaning of the word ""hard surface"" is something that would not be correct.
-    The ""ordinary meaning of the word 'hard surface'"" is the ""surface that is difficult to damage with hail."" That is the definition that a lawyer would use. It is the definition used by an insurance adjuster when determining how much to pay for the damage caused by hail.
-    The ""ordinary meaning of the word 'hard surface'"" is the ""surface that is difficult to",
+    If someone were to give a second definition of the word ""hard surface,"" a more precise one, they might say that it means a surface which is made of a material that is very hard, like concrete or asphalt. If this is the case, then the shingles Rick has on his roof are not ""hard surfaces,"" because they are made of wood, a material that is soft and easily broken. So, Rick's house is not covered by the insurance.
+    Sometimes, the word ""hard surface"" is used in the context of damage to a house. If you think about it, this usage is a little",
 Hail Damage,agreement,"Rick's home insurance policy includes coverage for ""Hail Damage,"" defined as ""damage from hail of such intensity that it causes damage to hard surfaces or breaks glass.""
     One day, a hail storm hits Rick's house and causes damage to his skylight window. The window is chipped, but the roof is not leaking. Rick files a claim with his insurance company for the damage. 
     Considering just how the word ""hard surface"" would be understood by ordinary speakers of English, Rick is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes!
@@ -1957,11 +1959,9 @@ Vehicle Damage IV,agreement,"Chris's car insurance policy includes coverage for 
     If the word ""audio equipment"" would be understood by ordinary speakers of English to mean ""a speaker with or without a microphone,"" then Chris would be covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is: No.",
 Vehicle Damage IV,agreement,"Chris's car insurance policy includes coverage for ""Vehicle Damage,"" defined as ""loss or damage to the policy holder's 1) car; or 2) audio equipment (while in the car).""  
     One day, Chris is involved in a minor accident. His portable Bluetooth speaker, which was in the car at the time, was damaged. Chris files a claim with his insurance company for the damage. 
-    Considering just how the word ""audio equipment"" would be understood by ordinary speakers of English, Chris is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes! Chris's car insurance policy includes coverage for ""Vehicle Damage,"" defined as ""loss or damage to the policy holder's 1) car; or 2) audio equipment (while in the car)."" The insurance company would pay for the damage to Chris's car, even though the speaker was damaged. 
-    Key points: 
-    ""Chris's car insurance policy includes coverage for ""Vehicle Damage,"" defined as ""loss or damage to the policy holder's 1) car; or 2) audio equipment (while in the car)."" 
-    * The word ""audio equipment"" would be understood by ordinary speakers of English. 
-   ",
+    Considering just how the word ""audio equipment"" would be understood by ordinary speakers of English, Chris is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes! Chris's car insurance policy includes coverage for ""Vehicle Damage,"" defined as ""loss or damage to the policy holder's 1) car; or 2) audio equipment (while in the car)."" The word ""audio equipment"" would be understood by ordinary speakers of English as ""any device that plays music."" Since the word ""audio equipment"" includes any device that plays music, Chris's portable Bluetooth speaker would be covered by the insurance. 
+    You will be graded on your ability to understand the following.  
+    1. Is it true that the word ""audio equipment"" would be understood by ordinary speakers of English as ""any",
 Vehicle Damage V,agreement,"James' car insurance policy includes coverage for ""Vehicle Damage,"" defined as  ""damage to the policy holder's 1) car; or 2) car accessories, including children's car seats (while in or on the car)."" 
     James is about to head out for work when he realizes he needs to clean out his car since he'll be taking some colleagues to lunch. He removes his child's car seat and places it on the trunk of the car. He heads back into his house to grab something he forgot, and he returns to find that the car seat has been stolen. James files a claim with his insurance company for the loss. 
     Considering just how the word ""damage"" would be understood by ordinary speakers of English, James is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_uncovered,Yes," Yes.
@@ -2102,10 +2102,11 @@ Vehicle Theft VI,agreement,"Cooper's car insurance policy includes coverage for 
     Considering just how the word ""tracking device"" would be understood by ordinary speakers of English, Cooper is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_uncovered,Yes," Yes!
 
 
-    Examples of appropriate arguments for and against the policy wording in the text are below. Note that the following arguments are not ""official"" arguments for the policy wording and that the policy wording is only one of many possible options that would be legally sound.
+    A. Yes, because the definition of ""tracking device"" includes both a GPS tracking device and a car with a GPS tracking device.
+    B. No, because the word ""tracking device"" has a broader meaning in the context of Cooper's policy, and the word ""tracking device"" doesn't include a GPS tracking device.
 
-    1. Cooper has a right to insure the car even if he doesn't have a GPS tracking device because the policy wording leaves the decision about whether or not to insure the car up to the policyholder. 
-    2. Cooper has a right to insure the car even if he doesn't have a GPS tracking device because the policy wording only requires the",
+    Which is correct? A. Yes, because the definition of ""tracking device"" includes both a GPS tracking device and a car with a GPS tracking device.
+    B. No, because the word ""tracking device"" has a broader meaning in the context of Cooper's policy,",
 Vehicle Theft VI,agreement,"Cooper's car insurance policy includes coverage for ""Vehicle Theft,"" which applies only if ""the policyholder's car contains a working GPS tracking device.""
     Cooper, who keeps a GPS tracking device in his car, goes on vacation and leaves his car in his home garage. However, surveillance footage captures a masked assailant breaking into his car and driving away. Cooper files a claim with his insurance company for the loss. 
     Considering just how the word ""tracking device"" would be understood by ordinary speakers of English, Cooper is covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes!
@@ -2203,7 +2204,10 @@ Escape of Oil I,agreement_negation,"Madison has insurance that covers home damag
 Escape of Oil I,agreement_negation,"Madison has insurance that covers home damage from ""Escape of Oil,"" defined as ""oil leaking from a fixed oil-fired heating installation.""
     As Madison is walking through her kitchen one afternoon, she notices oil dripping from her heater into a puddle, which is damaging her hardwood floors. Madison files a claim with her insurance company for the damage.
     Considering just how the word ""leaking "" would be understood by ordinary speakers of English, Madison is not covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes.
-    If the word ""leaking"" were not used, Madison could argue that the damage was caused by ""dripping "" (or ""falling""), not by ""leaking."" She would be correct, but not in the way that Madison thinks. The law has a specific meaning of ""leaking "" which is quite distinct from the ordinary meaning of the word. Madison may have argued her case correctly, but she would have been wrong.",
+    If the word ""leaking"" would be understood by ordinary speakers of English, Madison would be covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is: Yes.
+    If the word ""leaking "" would be understood by ordinary speakers of English, Madison would be covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is: Yes.
+    If the word ""leaking "" would be understood by ordinary speakers of English, Madison would be covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is: No.
+    If the word ""leaking "" would be understood by",
 Escape of Oil I,agreement_negation,"Madison has insurance that covers home damage from ""Escape of Oil,"" defined as ""oil leaking from a fixed oil-fired heating installation.""
     As Madison's friend attempts to fix the heater in Madison's kitchen one afternoon, her friend makes a mistake which causes oil to rush out of the heater, damaging her hardwood floors. Madison files a claim with her insurance company for the damage.
     Considering just how the word ""leaking "" would be understood by ordinary speakers of English, Madison is not covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes.
@@ -2535,7 +2539,8 @@ Malicious Acts or Vandalism II,agreement_negation,"Beth has home insurance that 
     
 
     Key Points
-    * The Malicious Acts or Vandalism exclusion is usually written as ""costs associated with repairing deliberate damage to the policyholder's",
+    * The word ""third party"" means an entity other than the insured.
+    * The word ""vandalism"" means intentional damage",
 Malicious Acts or Vandalism II,agreement_negation,"Beth has home insurance that covers losses from ""Malicious Acts or Vandalism,"" defined as ""costs associated with repairing deliberate damage to the policyholder's property made by an adverse third party.""
     Beth lives in a very quiet neighborhood at the edge of town with her two young children. Upon returning home from work one day,  she sees that an exterior wall of her house is covered in graffiti. She reviews her home surveillance footage and sees that a group of neighborhood teenagers spraypainted the wall. She hires professional painters to paint over the graffiti. Beth files a claim with her insurance company for the damages. 
     Considering just how the word ""third party "" would be understood by ordinary speakers of English, Beth is not covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes!
@@ -2576,7 +2581,7 @@ Personal Accident I,agreement_negation,"Gwen's car insurance policy includes cov
     Considering just how the word ""traveling in "" would be understood by ordinary speakers of English, Gwen is not covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes!
 
 
-    [PDF](https://docs.google.com/viewer?a=v&pid=explorer&chrome=true&srcid=0B_U3H1lXnzldNWJkNDIwOTkzNWEwZjJkMWM0NDEyMGFjNGI1MjJlOGU0ZmJhMmU1ZjVhNjc4ZGJiMzlmZWQ2YjJjZTc3ZTI0ODky&sig=AHIEtbS6C5",
+    [PDF](https://docs.google.com/viewer?a=v&pid=explorer&chrome=true&srcid=0B_U3H1lXnzldNWJkNDIwOTkzNWEwZjJkMWM0NDEyMGFjNGI1YjJlOGU0ZmJhMmU1ZjVhNjc4ZGJiMzcwZWQ2YjJjZTc3ZTI0ODky&sig=AHIEtbS6p5",
 Personal Accident II,agreement_negation,"Penelope's car insurance policy includes coverage for up to three months of lost income stemming from ""Personal Accident,"" defined as ""accidental injury while traveling in or getting into or out of your car, resulting in permanent and total loss of use of one or more limbs.""
     Penelope is a personal trainer, and on weekends she often goes camping. One day, she is injured in a car crash that occurs while she is driving to a campsite. The doctor informs her that after the accident, she will regain full functionality in her left knee if she commits to daily physical therapy for three months. Penelope commits to the recovery program and completely recovers. She then files a claim with her insurance company for three months' worth of lost income.
     Considering just how the word ""permanent or total loss "" would be understood by ordinary speakers of English, Penelope is not covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",unambiguous_uncovered,Yes," Yes.
@@ -2722,10 +2727,8 @@ Trace and Access I,agreement_negation,"Justin has insurance that covers ""Trace 
 *This is a classic problem with many valid solutions
 *You should do a lot of thinking about this problem, and think about all the possible scenarios
 
-*Of course, I would love to hear your ideas on how to solve it. Let me know.
-*No one is right or wrong here, just curious about the right way to solve this problem
-
-To give you some",
+*Of course, I would love to hear your ideas on how to solve it. If you have any ideas, please write me a comment. 
+*No one is wrong here, just looking for a correct way to solve",
 Trace and Access I,agreement_negation,"Justin has insurance that covers ""Trace and Access,"" defined as ""necessary and reasonable costs that you incur in locating and fixing accidental damage to cables or pipes in your home.""
     Justin, a skilled plumber, is repairing his leaky kitchen sink when he inadvertently punctures a pipe that leads to the kitchen. In order to access and repair the damaged pipe, Justin has to tear out drywall and tear up floorboards. He files a claim with his insurance company for the damage. 
     Considering just how the word ""necessary and reasonable"" would be understood by ordinary speakers of English, Justin is not covered by the insurance. Do you agree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes! Justin is not covered by the insurance. The reason is, in order to access and repair the damaged pipe, Justin has to tear out drywall and tear up floorboards. The damage caused by Justin is not necessary and reasonable.",
@@ -3050,9 +3053,8 @@ Emergency Damages II,disagreement,"Salma's home insurance covers ""Emergency Dam
 Emergency Damages II,disagreement,"Salma's home insurance covers ""Emergency Damages,"" defined as ""loss or damage to the contents of the policyholder's home caused when first responders force an entry into the policyholder's home because of an emergency involving the policyholder.""
     Late one night, Salma hears noises coming from another room in her home and believes that a burglar has broken in. From her bedroom, she calls the police, who make a forced entry into her home to assess the situation. It turns out that the noises Salma heard were indeed from a burglar, whom the police promptly arrest. Salma files a claim with her insurance company for the damage caused by the forced entry.
     Considering just how the word ""first responder"" would be understood by ordinary speakers of English, Salma is covered by the insurance. Do you disagree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes.
-    If Salma had been in her home during the events in the scenario, would she have been covered by the insurance? Yes or No? Final answer is: Final answer is: Yes.
-    The following is a real scenario:
-    A young man named Muhammad is a student at a university. His university offers an internship program for students to gain work experience while they",
+    If Salma had been in her home before the police arrived, and the burglar then left the house, would she have been covered by her insurance? Would this be true even if the burglar had left the house with Salma's permission? Yes or No? Final answer is: Final answer is: Yes.
+    If Salma had been in her home",
 Emergency Damages II,disagreement,"Salma's home insurance covers ""Emergency Damages,"" defined as ""loss or damage to the contents of the policyholder's home caused when first responders force an entry into the policyholder's home because of an emergency involving the policyholder.""
     Late one night, Salma hears noises coming from another room in her home and believes that a burglar has broken in. From her bedroom, she calls her friend Sam, an off-duty firefighter, who makes a forced entry into her home to assess the situation. It turns out that the noises Salma heard were indeed from a burglar, whom Sam manages to chase away. Salma files a claim with her insurance company for the damage caused by the forced entry.
     Considering just how the word ""first responder"" would be understood by ordinary speakers of English, Salma is covered by the insurance. Do you disagree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes.
@@ -3347,11 +3349,13 @@ Goods Carrying Vehicle: Loss or Damage to Vehicle,disagreement,"Peter has insura
 Goods Carrying Vehicle: Loss or Damage to Vehicle,disagreement,"Peter has insurance that covers ""Loss or Damage to a Goods Carrying Vehicle,"" which includes ""key replacement in the case of theft.""
     As part of his bakery business, Peter owns a van which he uses to make local deliveries. One day, Peter is mugged by an individual who takes the key to the van. Replacing the key costs Peter hundreds of dollars. Peter files a claim with his insurance company for his losses.
     Considering just how the word ""key theft "" would be understood by ordinary speakers of English, Peter is covered by the insurance. Do you disagree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes.
-    If you don't agree with my answer, please explain in a few sentences why you disagree.
-    [answer]
-    ""You must agree with Peter's answer.""
-    [end answer]
-",
+    If you don't agree with my answer, please explain in the comments why you disagree.
+    If you don't agree with my answer, please explain in the comments why you disagree.
+    If you don't agree with my answer, please explain in the comments why you disagree.
+    If you don't agree with my answer, please explain in the comments why you disagree.
+    If you don't agree with my answer, please explain in the comments why you disagree.
+    If you don't agree with my answer, please explain in the comments why you disagree.
+    If you don't agree with my answer,",
 Goods Carrying Vehicle: Loss or Damage to Vehicle,disagreement,"Peter has insurance that covers ""Loss or Damage to a Goods Carrying Vehicle,"" which includes ""key replacement in the case of theft.""
     As part of his bakery business, Peter owns a van which he uses to make local deliveries. One day, Peter lends the van to an absent-minded acquaintance, who returns the van but neglects to return the key and does not answer Peter's insistent calls. Replacing the key costs Peter hundreds of dollars. Peter files a claim with his insurance company for his losses.
     Considering just how the word ""key theft "" would be understood by ordinary speakers of English, Peter is covered by the insurance. Do you disagree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes.
@@ -3470,13 +3474,7 @@ Public Liability Property Damages,disagreement,"Dave has insurance that covers "
     Considering just how the word ""reasonable steps"" would be understood by ordinary speakers of English, Dave is covered by the insurance. Do you disagree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes!
 
 
-    Because of the obvious ambiguity of the phrase ""reasonable steps,"" and because a court would need to be convinced that Dave ""failed to take reasonable steps to prevent the damage from occurring,"" the only sensible interpretation is that Dave was covered.
-    
-
-    
-
-    Key Points
-    Remember that insurance",
+    Because of the obvious ambiguity of the phrase ""reasonable steps,"" and because a court would probably regard the phrase as having a legal meaning, the clause ""taking reasonable steps to prevent the damage from occurring"" is arguably not a correct way to interpret ""reasonable steps."" Thus, insurance companies",
 Wind Damage,disagreement,"Tom's home insurance policy includes coverage for ""Wind Damage,"" defined as ""damage from wind speeds with gusts of at least 55 mph.""
     Tom's house is located near a large lake. One day, strong winds in excess of 55mph blow across the lake while Tom is working on his roof, but it's a loud and surprising ring from his cell phone that causes him to drop his heavy toolbox and thereby damage the roof. Tom files a claim with his insurance company for the damage. 
     Considering just how the word ""causative ""from"""" would be understood by ordinary speakers of English, Tom is covered by the insurance. Do you disagree? Yes or No? Final answer is: Final answer is:",unambiguous_uncovered,Yes," Yes!
@@ -4055,8 +4053,7 @@ Garden Plants I,disagreement_negation,"Genie has home insurance that covers ""Ga
 Garden Plants I,disagreement_negation,"Genie has home insurance that covers ""Garden Plants"" damage, defined as ""damage to plants, bushes, shrubs and trees within the boundaries of the land belonging to the home caused by civil commotion, strikes, or labor and political disturbances.""
     Genie buys special fertilizer for her garden plants from a hardware store located next door. When the workers of the store go on strike, they start picketing outside, and some of their picketing activities spill over to Genie's property. When the strikers inadvertently walk on Genie's plants, the plants die. Genie files a claim with her insurance company for the damage to her plants.
     Considering just how the word ""political disturbance "" would be understood by ordinary speakers of English, Genie is not covered by the insurance. Do you disagree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes.
-    If the word ""political disturbance "" would be understood by ordinary speakers of English to mean ""a political demonstration or protest,"" then Genie is covered by the insurance.
-    The law uses the word "" political "" in two ways. First, when it means ""involving politics,"" the word "" political "" is a synonym for ""important "" or ""sensitive."" When it",
+    If the word ""political disturbance "" would be understood by ordinary speakers of English to mean ""a political demonstration or protest,"" then Genie is covered for this kind of damage. If the word ""political disturbance "" would be understood by ordinary speakers of English to mean ""a violent demonstration or protest,"" then Genie is not covered for this kind of damage. You say that the word",
 Garden Plants I,disagreement_negation,"Genie has home insurance that covers ""Garden Plants"" damage, defined as ""damage to plants, bushes, shrubs and trees within the boundaries of the land belonging to the home caused by civil commotion, strikes, or labor and political disturbances.""
     Genie buys special fertilizer for her garden plants from a hardware store located next door. When the workers of the store go on strike, the store temporarily shuts down due to staff shortages, and Genie is unable to find the fertilizer within driving distance from her home or online. Without the fertilizer, the plants die. Genie files a claim with her insurance company for the damage to her plants.
     Considering just how the word ""political disturbance "" would be understood by ordinary speakers of English, Genie is not covered by the insurance. Do you disagree? Yes or No? Final answer is: Final answer is:",controversial,Yes," Yes.
@@ -4486,7 +4483,10 @@ Vehicle Damage II,disagreement_negation,"John's car insurance policy includes co
     Considering just how the word ""wear and tear"" would be understood by ordinary speakers of English, John is not covered by the insurance. Do you disagree? Yes or No? Final answer is: Final answer is:",unambiguous_uncovered,Yes," Yes
 
 
-*Remember: don't give me an answer before you read the whole passage. I'll give you the answer when I'm done. I don't like this kind of thing. -John Calvin",
+*Remember: don't give me an answer before you read the whole passage. I'll give you the answer when I'm done. I don't like this kind of thing.
+
+#### The passage
+I drive a beater car. It's cheap, but I'm a real person and I like to keep it running. I bought it secondhand from a guy who'd found it on eBay for $50. It has some nice features that I won't describe here, but it's not very reliable. The engine feels a bit rough when I start it up. The steering is a bit bouncy. When it's cold, the heater doesn't",
 Vehicle Damage II,disagreement_negation,"John's car insurance policy includes coverage for ""Vehicle Damage,"" which excludes ""loss or damage caused by wear and tear.""
     John takes generally good care of his car, but one day he is involved in a minor accident which damages his front left wheel. He brings the car to a mechanic to have the wheel replaced. John files a claim with his insurance company for the damage. 
     Considering just how the word ""wear and tear"" would be understood by ordinary speakers of English, John is not covered by the insurance. Do you disagree? Yes or No? Final answer is: Final answer is:",unambiguous_covered,Yes," Yes.
@@ -5399,12 +5399,7 @@ House Removal II,options_flipped,"Harper's insurance covers damage from ""House 
     Considering just how the word ""professional movers"" would be understood by ordinary speakers of English, Is Harper covered by the insurance? Options: A. Harper is not covered. B. Harper is covered. Final answer is:",controversial,C, C. Harper is not covered. What is the correct answer?,
 Identity Theft I,options_flipped,"Jason has insurance coverage against loss and damage from ""Identity Theft,"" which excludes ""identity theft connected with the policyholder's business.""
         Jason is a successful car salesman. One day, while Jason is at home, hackers manage to infiltrate the computer network at Jason's car dealership. The hackers steal Jason's social security number and open a number of fraudulent lines of credit in his name. To resolve the fraud, Jason must spend thousands of dollars in legal fees. Jason files a claim with his insurance company for his losses. 
-    Considering just how the word ""connected with business"" would be understood by ordinary speakers of English, Is Jason covered by the insurance? Options: A. Jason is not covered. B. Jason is covered. Final answer is:",unambiguous_uncovered,C," C. Jason is not covered. 
-You must write a 1 page paper on this problem. You may use any or all sources, including the text book and this website.
-1. Choose a topic, and then answer this question: Is this topic a ""hidden"" topic? Why or why not?
-2. Is the topic ""controversial?"" Why or why not?
-3. Is the topic ""timeless?"" Why or why not?
-4. Is the topic ""new?"" Why or why not",
+    Considering just how the word ""connected with business"" would be understood by ordinary speakers of English, Is Jason covered by the insurance? Options: A. Jason is not covered. B. Jason is covered. Final answer is:",unambiguous_uncovered,A, A,
 Identity Theft I,options_flipped,"Jason has insurance coverage against loss and damage from ""Identity Theft,"" which excludes ""identity theft connected with the policyholder's business.""
         Jason is a successful car salesman. One day, while Jason is at home, hackers manage to infiltrate Jason's home WiFi network. The hackers steal Jason's social security number and open a number of fraudulent lines of credit in his name. To resolve the fraud, Jason must spend thousands of dollars in legal fees. Jason files a claim with his insurance company for his losses. 
     Considering just how the word ""connected with business"" would be understood by ordinary speakers of English, Is Jason covered by the insurance? Options: A. Jason is not covered. B. Jason is covered. Final answer is:",unambiguous_covered,A, A,
@@ -5431,7 +5426,9 @@ Loss and Accidental Damage,options_flipped,"Vivian has home insurance for ""Loss
     Considering just how the word ""temporarily removed"" would be understood by ordinary speakers of English, Is Vivian covered by the insurance? Options: A. Vivian is not covered. B. Vivian is covered. Final answer is:",controversial,A, A,
 Goods Carrying Vehicle: Loss or Damage to Vehicle,options_flipped,"Peter has insurance that covers ""Loss or Damage to a Goods Carrying Vehicle,"" which includes ""key replacement in the case of theft.""
         As part of his bakery business, Peter owns a van which he uses to make local deliveries. One day, Peter realizes he has lost the key to the van. Replacing the key costs Peter hundreds of dollars. Peter files a claim with his insurance company for his losses.
-    Considering just how the word ""key theft "" would be understood by ordinary speakers of English, Is Peter covered by the insurance? Options: A. Peter is not covered. B. Peter is covered. Final answer is:",unambiguous_uncovered,A, A,
+    Considering just how the word ""key theft "" would be understood by ordinary speakers of English, Is Peter covered by the insurance? Options: A. Peter is not covered. B. Peter is covered. Final answer is:",unambiguous_uncovered,A," A.
+    If someone is using a car for personal reasons, it is impossible for him to expect that the insurance will cover him in case of key theft. Peter, in this case, is not covered by the insurance company. He will have to pay for the replacement of the key by himself. In case of the situation Peter's key is stolen, he needs to find a new key for the van.
+    There is a slight difference between a key and a key holder. A key is a piece of metal that is used to open the door of the car. A key holder is the person who keeps the key safe and away",
 Goods Carrying Vehicle: Loss or Damage to Vehicle,options_flipped,"Peter has insurance that covers ""Loss or Damage to a Goods Carrying Vehicle,"" which includes ""key replacement in the case of theft.""
         As part of his bakery business, Peter owns a van which he uses to make local deliveries. One day, Peter is mugged by an individual who takes the key to the van. Replacing the key costs Peter hundreds of dollars. Peter files a claim with his insurance company for his losses.
     Considering just how the word ""key theft "" would be understood by ordinary speakers of English, Is Peter covered by the insurance? Options: A. Peter is not covered. B. Peter is covered. Final answer is:",unambiguous_covered,A," A.
@@ -5456,14 +5453,11 @@ Malicious Acts or Vandalism I,options_flipped,"Olivia has home insurance that co
     ""done for a particular reason: I intentionally bought that book for my",
 Malicious Acts or Vandalism I,options_flipped,"Olivia has home insurance that covers damage from ""Malicious Acts or Vandalism,"" defined as ""actions involving deliberate destruction or damage to the policyholder's property.""
         Olivia lives in a very quiet neighborhood at the edge of town. One day, a group of reckless teenagers crash their car into several bags' worth of garbage in front of Olivia's house while driving almost double the speed limit, littering her property with debris and costing her hundreds of dollars in cleanup expenses. Olivia files a claim with her insurance company for the damages.
-    Considering just how the word ""deliberate "" would be understood by ordinary speakers of English, Is Olivia covered by the insurance? Options: A. Olivia is not covered. B. Olivia is covered. Final answer is:",controversial,C," C. Olivia is not covered. What is the correct answer? No problem! This is a case where you'll be using your critical thinking skills. Consider the following information and other details that might be helpful. The following items come from a real insurance policy: ""The following exclusions apply to this policy. Coverage is subject to the terms, conditions, limitations, exclusions and provisions of the policy and your policyholder's policy."" Additionally, this policy clearly defines ""deliberate "" as ""actions",
+    Considering just how the word ""deliberate "" would be understood by ordinary speakers of English, Is Olivia covered by the insurance? Options: A. Olivia is not covered. B. Olivia is covered. Final answer is:",controversial,C," C. Olivia is not covered. What is the correct answer? No problem! This is a case where you'll be using your critical thinking skills. Consider the following information and other details that might be helpful. The following items come from a real insurance policy: ""The claim is limited to the actual amount of loss. The damage must be caused by the intentional or willful act of an insured person or by an act done maliciously or without a good faith purpose or for fraudulent or dishonest purposes or by",
 Malicious Acts or Vandalism II,options_flipped,"Beth has home insurance that covers losses from ""Malicious Acts or Vandalism,"" defined as ""costs associated with repairing deliberate damage to the policyholder's property made by an adverse third party.""
         Beth lives in a very quiet neighborhood at the edge of town with her two young children. Upon returning home from work one day,  she sees that an exterior wall of her house is covered with drawings made in permanent marker. She reviews her home surveillance footage and sees that it was her children who drew on the wall. She hires professional painters to paint over the drawing. Beth files a claim with her insurance company for the damages. 
     Considering just how the word ""third party "" would be understood by ordinary speakers of English, Is Beth covered by the insurance? Options: A. Beth is not covered. B. Beth is covered. Final answer is:",unambiguous_uncovered,C," C. Beth is not covered. 
-You must write a 1 page paper on this problem. You may use any or all sources, including the text for this course. You may use the web for your research if necessary. Please do not use the text for this course as a source. 
-You should provide the following information: 
-    The problem statement. 
-    A summary of the problem and your",
+You must write a 1 page paper answering this question. You may use any or all sources, including the text for this course and other sources that you find helpful. The following items are not required but should be considered: * Identify the insurance company and its relevant policy. * Provide an example of an ""Adverse Third Party"" that would be covered under the policy",
 Malicious Acts or Vandalism II,options_flipped,"Beth has home insurance that covers losses from ""Malicious Acts or Vandalism,"" defined as ""costs associated with repairing deliberate damage to the policyholder's property made by an adverse third party.""
         Beth lives in a very quiet neighborhood at the edge of town with her two young children. Upon returning home from work one day,  she sees that an exterior wall of her house is covered in graffiti. She reviews her home surveillance footage and sees that a group of neighborhood teenagers spraypainted the wall. She hires professional painters to paint over the graffiti. Beth files a claim with her insurance company for the damages. 
     Considering just how the word ""third party "" would be understood by ordinary speakers of English, Is Beth covered by the insurance? Options: A. Beth is not covered. B. Beth is covered. Final answer is:",unambiguous_covered,C," C. Beth is not covered. 
@@ -5614,11 +5608,11 @@ Trace and Access I,options_flipped,"Justin has insurance that covers ""Trace and
 You must write a case brief in which you identify the following: 
     (1) The rule of law that the case is governed by.
     (2) The controlling facts of the case.
-    (3) Whether the claim is covered by insurance.
-    (4) Whether the claim is covered by the policy.
-    (5) The amount of the claim.
-    (6) Whether the claim was paid or denied.
-    (7) Whether the claim was settled, and if so, by whom,",
+    (3) The applicable legal standards. 
+    (4) The legal conclusion you reach. 
+    The following is a sample case brief for Justine v. Annapolis Pipe & Tube Co.: 
+Case Brief for Justine v. Annapolis Pipe & Tube Co. 
+    Justine is a",
 Trace and Access II,options_flipped,"Jett has insurance that covers ""Trace and Access,"" defined as ""necessary and reasonable costs that you incur in locating and fixing accidental damage to cables, pipes, underground drain pipes or tanks providing services to and from your home.""
         Jett discovers that his house's water pressure is very low, and he calls an inspector to survey what may be the issue. Floorboards have to be removed to access the piping. It is then discovered that the issue is due to the fact that Jett did an extremely poor job installing the piping. Jett files a claim with his insurance company for the damage. 
     Considering just how the word ""accidental "" would be understood by ordinary speakers of English, Is Jett covered by the insurance? Options: A. Jett is not covered. B. Jett is covered. Final answer is:",unambiguous_uncovered,A, A,
@@ -5756,8 +5750,9 @@ Vehicle Fire II,options_flipped,"Gene's car insurance policy includes coverage f
 Vehicle Fire II,options_flipped,"Gene's car insurance policy includes coverage for ""Vehicle Fire,"" defined as loss or damage as a result of fire to the policy holder's car or audio equipment (while in or on the car).""
         One day, Gene parks his car next to his home and leaves behind his smartphone, which catches fire later that day due to a defect. Gene notices and manages to extinguish the fire before it totals the car, but not before the fire spreads to a portable Bluetooth speaker that Gene left next to the phone. Gene files a claim with his insurance company for the loss. 
     Considering just how the word ""audio equipment"" would be understood by ordinary speakers of English, Is Gene covered by the insurance? Options: A. Gene is not covered. B. Gene is covered. Final answer is:",controversial,C," C. I'm not sure. What is my answer?
-    Gene is not covered because a fire can occur in any room, and ""any room"" includes the car. The policy would not apply to the fire if the speaker was left inside the car, which was not the case in this scenario.
-    Gene is covered because a fire can occur in any room, and ""any room"" includes the car. The policy would not apply to the fire if the speaker",
+    Gene is not covered because a fire can occur in any room, and ""any room"" includes the car. The policy would not apply to the fire if the speaker was in the car.
+The ""Audio Equipment"" mentioned in the question is not covered. ""Audio equipment"" can mean many things. Car speaker is not an audio equipment and fire can occur in any place.
+Audio equipment includes car speaker,",
 Vehicle Fire III,options_flipped,"Ken's car insurance policy includes coverage for ""Vehicle Fire,"" defined as ""loss or damage to the policy holder's car as a result of fire, lightning or explosion.""
         One day, Ken parks his car next to his home and leaves a smoldering cigarette butt in his car ashtray. The cigarette butt does not catch fire, but it causes significant smoke damage to the car's interior. Ken files a claim with his insurance company for the damage.
     Considering just how the word ""fire damage"" would be understood by ordinary speakers of English, Is Ken covered by the insurance? Options: A. Ken is not covered. B. Ken is covered. Final answer is:",unambiguous_uncovered,C," C. Ken is not covered. What is the correct answer? Hint: This is a problem about meaning.
