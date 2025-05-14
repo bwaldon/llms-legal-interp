@@ -82,7 +82,7 @@ def load_and_infer_with_model(model_name, seed, dataset):
 
     # https://stackoverflow.com/questions/43647186/tokenize-based-on-white-space-and-trailing-punctuation
     def extract_first_token(text):
-        return [x.strip("\"'") for x in re.split(r"([.,!?]+)?\s+", text) if x][0]
+        return [x.strip("\"'\.") for x in re.split(r"([.,!?]+)?\s+", text) if x][0]
 
     # Collate data and outputs
     def collate_data_and_outputs(model_name, dataset, outputs):
