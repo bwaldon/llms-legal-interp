@@ -37,12 +37,16 @@ model_list = [
     "meta-llama/Llama-3.1-8B",
     "meta-llama/Llama-3.1-8B-Instruct",
     "gpt2-medium",
-    "gpt2-large",
-    "gpt2-xl",
-    "bigscience/bloom-560m"
-    "bigscience/bloom-1b1",
-    "bigscience/bloom-3b",
-    "bigscience/bloom-7b1"
+    # "gpt2-large" fails at 2 prompts,  logbrobs 16
+    # "gpt2-xl", fails at 2 prompts,  logbrobs 16
+    #"bigscience/bloom-560m", Works
+    #"bigscience/bloom-1b1", fails at 2 prompts, logbrobs 16
+    #"bigscience/bloom-3b",  fails at 2 prompts, logbrobs 16
+    #"bigscience/bloom-7b1", fails at 2 prompts, logbrobs 16
+    "allenai/OLMo-2-1124-7B",
+    "allenai/OLMo-2-1124-7B-Instruct",
+    "mistralai/Ministral-8B-Instruct-2410",
+    "google/gemma-7b-it"
 ]
 
 def get_prompts():
