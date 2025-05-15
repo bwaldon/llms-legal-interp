@@ -68,10 +68,10 @@ def get_prompts():
         MetaLinguisticPrompt(topic="landscaping", features=["event", "coverage", "judgement", "mc_prompt_reverse"])
     ]
 """
-    Interactive snippet for inference
-    prompt = MetaLinguisticPrompt(topic="landscaping", features=["question", "bool"])
-    model = MetaLinguisticJudgement("meta-llama/Llama-3.2-1B", 42)
-    model.infer([prompt])
+# Interactive snippet for inference
+prompt = get_dataset_for_coverage_questions()[0]
+model = MetaLinguisticJudgement("meta-llama/Llama-3.2-8B", 42)
+output = model.infer([prompt])
     """
 
 
