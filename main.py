@@ -153,7 +153,10 @@ def hf_auth_check(model_list):
 def test(seed):
     prompts_dataset = Dataset.from_dict(get_dataset_for_coverage_questions()[:2])
     for model_name in model_list[:1]:
-        load_and_infer_with_model(model_name, seed, prompts_dataset)
+        results_dict = load_and_infer_with_model(model_name, seed, prompts_dataset)
+        results = Dataset.from_dict(results_dict)
+        print(f"For {model_name} results :{results}")
+        results.to_csv(f"tests/{model_name}-results.csv", index=False)
 
 def main(seed):
     prompts_dataset = get_dataset_for_coverage_questions()
