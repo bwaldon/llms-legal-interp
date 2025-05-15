@@ -95,7 +95,7 @@ def load_and_infer_with_model(model_name, seed, dataset, tokens_of_interest=("Ye
             #     token_ids[token].append(vocab[token.lower()])
         return token_ids
 
-    token_ids_of_interest = get_token_ids_of_interest(tokens_of_interest, model.tokenizer.get_vocab())
+    token_ids_of_interest = get_token_ids_of_interest(tokens_of_interest, model.llm.get_tokenizer().get_vocab())
     prompts = dataset["prompt"]
     outputs = model.infer(prompts)
 
@@ -107,20 +107,20 @@ def load_and_infer_with_model(model_name, seed, dataset, tokens_of_interest=("Ye
             return [x.strip("\"'\.!") for x in re.split(r"([a-zA-z]+)?\s+", text) if x][0]
 
         def collate_logprobs_for_tokens_of_interest(n, token_ids_of_interest, output):
-            seq_len = len(output.logprobs)
-            tokens_probs = list()
-            for token in token_ids_of_interest:
-                tokens_probs[token] = np.ndarray((seq_len, 1))
+            tokens_probs = dict()
+            #for token in token_ids_of_interest:
+            #    tokens_probs[token] = np.ndarray((n, 1))
 
-            for position, logprobs in enumerate(output.logprobs)[:n]:
+            for position, logprobs in enumerate(output.logprobs[:n]):
                 for token, token_id in token_ids_of_interest.items():
-                    tokens_probs[token][position] = logprobs[token_id].logprob if token_id in logprobs else 0
+                    tokens_probs[token] = logprobs[token_id].logprob if token_id in logprobs else 0
             return tokens_probs
 
         print(f"Dataset : {len(dataset)} {len(outputs)}")
         # Just get the probs for the output
         # TODO batched processing
-        results_token_probs = [collate_logprobs_for_tokens_of_interest(1, token_ids_of_interest, output) for output in outputs]
+        seq_len_to_search = 1
+        results_token_probs = [collate_logprobs_for_tokens_of_interest(seq_len_to_search, token_ids_of_interest, output) for output in outputs]
         results_dict = {
             "title": dataset["title"],
             "prompt_type": dataset["prompt_type"],
@@ -152,7 +152,7 @@ def hf_auth_check(model_list):
 
 def test(seed):
     prompts_dataset = Dataset.from_dict(get_dataset_for_coverage_questions()[:2])
-    for model_name in model_list[:1]:
+    for model_name in ["meta-llama/Llama-3.1-8B-Instruct"]:
         results_dict = load_and_infer_with_model(model_name, seed, prompts_dataset)
         results = Dataset.from_dict(results_dict)
         print(f"For {model_name} results :{results}")
