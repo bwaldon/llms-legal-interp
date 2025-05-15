@@ -131,10 +131,10 @@ def load_and_infer_with_model(model_name, seed, dataset, tokens_of_interest=("Ye
             "cum_logprob": [output.cumulative_logprob for output in outputs]
         }
 
-        # results_dict["Yes_prob"] = [token_probs["Yes"] for token_probs in results_token_probs]
-        # results_dict["No_prob"] = [token_probs["No"] for token_probs in results_token_probs]
-        # results_dict["A_prob"] = [token_probs["A"] for token_probs in results_token_probs]
-        # results_dict["B_prob"] = [token_probs["B"] for token_probs in results_token_probs]
+        results_dict["Yes_prob"] = [token_probs["Yes"] for token_probs in results_token_probs]
+        results_dict["No_prob"] = [token_probs["No"] for token_probs in results_token_probs]
+        results_dict["A_prob"] = [token_probs["A"] for token_probs in results_token_probs]
+        results_dict["B_prob"] = [token_probs["B"] for token_probs in results_token_probs]
         return results_dict
 
     del model
