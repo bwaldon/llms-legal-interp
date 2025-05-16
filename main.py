@@ -1,18 +1,21 @@
 import argparse
-import csv
+
 import gc
+import string
+import token
 from collections import namedtuple
+import re
+import random
+import numpy as np
+
+from tqdm import tqdm
 
 from huggingface_hub import auth_check
 import torch
 
+from prompts import get_dataset_for_coverage_questions
 from model import MetaLinguisticPrompt, MetaLinguisticJudgement
-
-import random
-import numpy as np
-
-from enum import Enum
-from prompts import get_yes_or_no_vague_contracts
+from datasets import Dataset
 
 def print_logprobs(logprobs):
     for prompt_logprobs in logprobs:
@@ -26,6 +29,7 @@ def set_random_seed(seed):
         torch.cuda.manual_seed_all(seed)
     torch.use_deterministic_algorithms(True, warn_only=True)
 
+
 model_list = [
     "meta-llama/Llama-3.2-1B",
     "meta-llama/Llama-3.2-1B-Instruct",
@@ -34,19 +38,17 @@ model_list = [
     "meta-llama/Llama-3.1-8B",
     "meta-llama/Llama-3.1-8B-Instruct",
     "gpt2-medium",
-    "gpt2-large",
-    "gpt2-xl",
-    "bigscience/bloom-560m"
-    "bigscience/bloom-1b1",
-    "bigscience/bloom-3b",
-    "bigscience/bloom-7b1"
+    # "gpt2-large" fails at 2 prompts,  logbrobs 16
+    # "gpt2-xl", fails at 2 prompts,  logbrobs 16
+    #"bigscience/bloom-560m", Works
+    #"bigscience/bloom-1b1", fails at 2 prompts, logbrobs 16
+    #"bigscience/bloom-3b",  fails at 2 prompts, logbrobs 16
+    #"bigscience/bloom-7b1", fails at 2 prompts, logbrobs 16
+    "allenai/OLMo-2-1124-7B",
+    "allenai/OLMo-2-1124-7B-Instruct",
+    "mistralai/Ministral-8B-Instruct-2410",
+    "google/gemma-7b-it"
 ]
-
-
-def cleanup():
-    torch.cuda.empty_cache()
-    gc.collect()
-
 
 def get_prompts():
     return [
@@ -66,73 +68,118 @@ def get_prompts():
         MetaLinguisticPrompt(topic="landscaping", features=["event", "coverage", "judgement", "mc_prompt_reverse"])
     ]
 """
-    Interactive snippet for inference
-    prompt = MetaLinguisticPrompt(topic="landscaping", features=["question", "bool"])
-    model = MetaLinguisticJudgement("meta-llama/Llama-3.2-1B", 42)
-    model.infer([prompt])
-    
-"""
-def load_and_infer_with_model(model_name, seed, output_type, prompts, dataset):
+# Interactive snippet for inference
+prompt = get_dataset_for_coverage_questions()[0]
+model = MetaLinguisticJudgement("meta-llama/Llama-3.2-8B", 42)
+output = model.infer([prompt])
+    """
+
+
+def load_and_infer_with_model(model_name, seed, dataset, tokens_of_interest=("Yes", "No", "A", "B")):
+    def model_cleanup():
+        torch.cuda.empty_cache()
+        gc.collect()
+
+
     print(model_name + "\n")
+
     model = MetaLinguisticJudgement(model_name, seed)
-    # outputs = model.infer(dataset["prompt"])
+    def get_token_ids_of_interest(tokens_of_interest, vocab):
+        token_ids = dict()
+        for token in tokens_of_interest:
+            token_ids[token] =  None #list()
+            if token in vocab:
+                token_ids[token] = (vocab[token])
 
+            # if token.lower() in vocab:
+            #     token_ids[token].append(vocab[token.lower()])
+        return token_ids
 
+    token_ids_of_interest = get_token_ids_of_interest(tokens_of_interest, model.llm.get_tokenizer().get_vocab())
+    prompts = dataset["prompt"]
+    outputs = model.infer(prompts)
 
-    def print_prompts_and_output(p, o):
-        result = result_from_output(p, o)
-        star_20 = '*' * 20
-        output_string = f"""
-        {star_20}{result.topic}{star_20}{result.nudge}{star_20}
-        
-        {p.text}
-        
-        {result.output}
-        
-        {result.output_prob}
-        """
+    # Collate data and outputs
+    def collate_data_and_outputs(model_name, dataset, outputs):
 
-        # output_string += f"{star_20}{p.topic}{star_20}{p.nudge}{star_20}"
-        # output_string += "\n\n"
-        # output_string += p.text
-        # output_string += "\n\n"
-        # output_string += o
-        # output_string += "\n\n\n"
-        print(output_string)
+        # https://stackoverflow.com/questions/43647186/tokenize-based-on-white-space-and-trailing-punctuation
+        def extract_first_answer_token(text):
+            return [x.strip("\"'\.!") for x in re.split(r"([a-zA-z]+)?\s+", text) if x][0]
 
+        def collate_logprobs_for_tokens_of_interest(n, token_ids_of_interest, output):
+            tokens_probs = dict()
+            #for token in token_ids_of_interest:
+            #    tokens_probs[token] = np.ndarray((n, 1))
 
-    def result_from_output(prompt, output):
-        PromptResult = namedtuple('PromptResult', ['prompt', 'topic', 'nudge', 'output', 'output_prob', 'output_token_probs', 'token_probs'])
-        return PromptResult(prompt, prompt.topic, prompt.nudge , output.text, output.cumulative_logprob,  output.logprobs, None)
+            for position, logprobs in enumerate(output.logprobs[:n]):
+                for token, token_id in token_ids_of_interest.items():
+                    tokens_probs[token] = logprobs[token_id].logprob if token_id in logprobs else 0
+            return tokens_probs
 
-    match output_type:
-        case OutputType.TEXT:
-            outputs = model.infer([prompt.text for prompt in prompts])
-            for p, o in zip(prompts, outputs):
-                print_prompts_and_output(p, o)
-        case OutputType.LOGPROBS:
-            outputs = model.probs(prompts)
-            print_logprobs(outputs)
+        print(f"Dataset : {len(dataset)} {len(outputs)}")
+        # Just get the probs for the output
+        # TODO batched processing
+        seq_len_to_search = 1
+        results_token_probs = [collate_logprobs_for_tokens_of_interest(seq_len_to_search, token_ids_of_interest, output) for output in outputs]
+        results_dict = {
+            "title": dataset["title"],
+            "prompt_type": dataset["prompt_type"],
+            "prompt": dataset["prompt"],
+            "version": dataset["version"],
+            "output": [extract_first_answer_token(output.text) for output in outputs],
+            "output_text": [output.text for output in outputs],
+            "cum_logprob": [output.cumulative_logprob for output in outputs]
+        }
+
+        results_dict["Yes_prob"] = [token_probs["Yes"] for token_probs in results_token_probs]
+        results_dict["No_prob"] = [token_probs["No"] for token_probs in results_token_probs]
+        results_dict["A_prob"] = [token_probs["A"] for token_probs in results_token_probs]
+        results_dict["B_prob"] = [token_probs["B"] for token_probs in results_token_probs]
+        return results_dict
+
     del model
-    cleanup()
+    model_cleanup()
+    return collate_data_and_outputs(model_name, dataset, outputs)
 
-class OutputType(Enum):
-    TEXT = "text"
-    LOGPROBS = "logprobs"
+# class OutputType(Enum):
+#     TEXT = "text"
+#     LOGPROBS = "logprobs"
 
 def hf_auth_check(model_list):
     for model in model_list:
         auth_check(model)
 
-def main(seed, output_type):
-    prompts = get_prompts()
-    prompts_dataset = get_yes_or_no_vague_contracts()["test"]
-    for model_name in model_list:
-        load_and_infer_with_model(model_name, seed, output_type, prompts, prompts_dataset)
+
+def test(seed):
+    prompts_dataset = Dataset.from_dict(get_dataset_for_coverage_questions()[:2])
+    for model_name in ["meta-llama/Llama-3.1-8B-Instruct"]:
+        results_dict = load_and_infer_with_model(model_name, seed, prompts_dataset)
+        results = Dataset.from_dict(results_dict)
+        print(f"For {model_name} results :{results}")
+        results.to_csv(f"tests/{model_name}-results.csv", index=False)
+
+def main(seed):
+    prompts_dataset = get_dataset_for_coverage_questions()
+    print("Using the following dataset:")
+    print(prompts_dataset)
+    for model_name in tqdm(model_list, desc="For models"):
+        print("Running with model:", model_name)
+        results_dict = load_and_infer_with_model(model_name, seed, prompts_dataset)
+        # TODO see if we should just make it pyarrow
+        results = Dataset.from_dict(results_dict)
+        print(f"For {model_name} results :{results}")
+        results.to_csv(f"runs/{model_name}-results.csv", index=False)
+        del results
+        del results_dict
+        gc.collect()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--type", type=OutputType, default=OutputType.TEXT)
+    parser.add_argument("--test", default=False, action="store_true")
     args = parser.parse_args()
-    main(args.seed, args.type)
+    if args.test:
+        test(args.seed)
+        exit(1)
+
+    main(args.seed)
