@@ -1,10 +1,10 @@
 import csv
-from typing import Literal
-import re
-from pprint import pprint
 
 from datasets import load_dataset, concatenate_datasets
 from tqdm import tqdm
+from enum import Enum
+
+prompt_types = ["yes_or_no", "no_or_yes", "agreement", "agreement_negation", "disagreement", "disagreement_negation", "options", "options_flipped"]
 
 class MetaLinguisticPrompt:
     def __init__(self, nudge=None, features=None, topic="landscaping"):

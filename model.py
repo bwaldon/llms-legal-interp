@@ -16,6 +16,7 @@ class MetaLinguisticJudgement:
             gpu_memory_utilization=0.95,
             max_num_seqs=8,
             swap_space=8,
+            max_num_batched_tokens=256
         )
 
     def infer(self, prompts: List[MetaLinguisticPrompt]) -> List[CompletionOutput]:
