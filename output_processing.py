@@ -20,6 +20,8 @@ def get_aff_unaff_columns(prompt_type):
 def organize_distribution(model_results):
     model_results["Yes_prob"] = np.exp(model_results["Yes_prob"].values)
     model_results["No_prob"] = np.exp(model_results["No_prob"].values)
+    model_results["A_prob"] = np.exp(model_results["Yes_prob"].values)
+    model_results["B_prob"] = np.exp(model_results["No_prob"].values)
     model_results["Other_prob"] = 1 - model_results["Yes_prob"] - model_results["No_prob"]
 
     for group, indices in model_results.groupby("prompt_type").indices.items():
@@ -65,9 +67,6 @@ def get_divergences_for_items(divergences):
 def get_item_divergences(divergences):
     return divergences.groupby(['title', 'version'], sort=False, as_index=False).apply(lambda x: x.kl_div.mean(), include_groups=False).rename(
         columns={None: "mean_divergence"})
-
-def get_version_divergences_for_items(divergences):
-    return
 
 
 def summarize_missing_probs(df):
