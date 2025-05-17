@@ -104,7 +104,7 @@ def load_and_infer_with_model(model_name, seed, dataset, tokens_of_interest=("Ye
 
         # https://stackoverflow.com/questions/43647186/tokenize-based-on-white-space-and-trailing-punctuation
         def extract_first_answer_token(text):
-            return [x.strip("\"'\.!") for x in re.split(r"([a-zA-z]+)?\s+", text) if x][0]
+            return [x.strip("\"'\.!") for x in re.split(r"([a-zA-z]+)\s+", text) if x][0]
 
         def collate_logprobs_for_tokens_of_interest(n, token_ids_of_interest, output):
             tokens_probs = dict()
