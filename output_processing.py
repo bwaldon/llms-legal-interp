@@ -17,6 +17,7 @@ def get_aff_unaff_columns(prompt_type):
         case _:
             raise ValueError()
 
+
 def organize_distribution(model_results):
     model_results["Yes_prob"] = np.exp(model_results["Yes_prob"].values)
     model_results["No_prob"] = np.exp(model_results["No_prob"].values)
@@ -76,3 +77,10 @@ def summarize_missing_probs(df):
         (df[["Yes_prob", "No_prob"]][non_options_mask] == 0).astype(int).sum(axis=0),
         (df[["A_prob", "B_prob"]][options_mask] == 0).astype(int).sum(axis=0)
     ])
+
+def analyze_model_divergences(df):
+    model_results = organize_distribution(df)
+    divergences = get_divergences(model_results)
+    prompt_divergences = get_divergences_for_prompt_type(divergences)
+    item_divergences = get_divergences_for_items(divergences)
+    return divergences, prompt_divergences, item_divergences
