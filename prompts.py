@@ -1,11 +1,11 @@
 import csv
 from typing import Literal
 import re
+from collections import OrderedDict
 from pprint import pprint
 
 from datasets import load_dataset, concatenate_datasets
 from tqdm import tqdm
-
 class MetaLinguisticPrompt:
     def __init__(self, nudge=None, features=None, topic="landscaping"):
         self.nudge = nudge
@@ -121,6 +121,14 @@ def coverage_binary_question_yes_no(contract):
 def coverage_binary_question_no_yes(contract):
     return coverage_binary_question(NO_YES_QUESTION, contract)
 
+def is_person_not_covered_question(person_name):
+    return f"Is {person_name} not covered by the insurance?"
+
+def coverage_binary_question_negation(contract):
+    # list for HF
+    return f"""{contract['header']}
+{contract['continuation']}
+{locus_premise(contract['locus_of_uncertainty'])}, {is_person_not_covered_question(contract['person_name'])}? {YES_NO_QUESTION}"""
 
 def coverage_agreement(contract):
     return f"""{contract['header']}
@@ -167,18 +175,23 @@ def construct_dataset(prompt_types):
         prompt_datasets.append(prompts_dataset)
     return concatenate_datasets(prompt_datasets)
 
+
+prompt_types = ["yes_or_no", "no_or_yes", "negation", "agreement", "agreement_negation", "disagreement", "disagreement_negation", "options", "options_flipped"]
+prompt_template_functions = {
+    "yes_or_no": coverage_binary_question_yes_no,
+    "no_or_yes": coverage_binary_question_no_yes,
+    "negation": coverage_binary_question_negation,
+    "agreement": coverage_agreement,
+    "agreement_negation": coverage_agreement_on_negation,
+    "disagreement": coverage_disagreement,
+    "disagreement_negation": coverage_disagreement_on_negation,
+    "options": coverage_options,
+    "options_flipped": coverage_options_flipped,
+}
+
 def get_dataset_for_coverage_questions():
     return construct_dataset(
-        {
-            "yes_or_no": coverage_binary_question_yes_no,
-            "no_or_yes": coverage_binary_question_no_yes,
-            "agreement": coverage_agreement,
-            "agreement_negation": coverage_agreement_on_negation,
-            "disagreement": coverage_disagreement,
-            "disagreement_negation": coverage_disagreement_on_negation,
-            "options": coverage_options,
-            "options_flipped": coverage_options_flipped,
-        }
+       prompt_template_functions
     )
 
 
