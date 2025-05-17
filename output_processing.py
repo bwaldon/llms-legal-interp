@@ -40,7 +40,7 @@ def get_divergences(model_results):
     for group, df in model_results.groupby(['title', 'version'], sort=False):
         control_mask = df.prompt_type == "yes_or_no"
         control_probs = df[["Aff_Prob", "UnAff_Prob", "Other_prob"]][control_mask]
-        for variation in prompt_types[1:6]:
+        for variation in prompt_types[1:]:
             variation_mask = df.prompt_type == variation
             variation_probs = df[["Aff_Prob", "UnAff_Prob", "Other_prob"]][variation_mask]
             kl_div = sp.special.kl_div(control_probs.values, variation_probs.values)
@@ -70,3 +70,10 @@ def get_version_divergences_for_items(divergences):
     return
 
 
+def summarize_missing_probs(df):
+    non_options_mask = (df["prompt_type"] != "options") & (df["prompt_type"] != "options_flipped")
+    options_mask = (df["prompt_type"] == "options") | (df["prompt_type"] == "options_flipped")
+    return pd.concat([
+        (df[["Yes_prob", "No_prob"]][non_options_mask] == 0).astype(int).sum(axis=0),
+        (df[["A_prob", "B_prob"]][options_mask] == 0).astype(int).sum(axis=0)
+    ])
