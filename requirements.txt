@@ -7,3 +7,4 @@ datasets==3.3.2
 huggingface-hub==0.29.3
 transformers==4.50.2
 flashinfer-python==0.2.5
+scipy==1.15.3
