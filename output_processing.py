@@ -2,70 +2,71 @@ import pandas as pd
 
 from prompts import prompt_types
 import numpy as np
+import scipy as sp
 
-def convert_version_to_target(prompt_type, version):
+def get_aff_unaff_columns(prompt_type):
     match prompt_type:
-        case "yes_or_no" | "no_or_yes":
-            match version:
-                case "unambiguous_covered":
-                    return "Yes"
-                case "unambiguous_uncovered":
-                    return "No"
-                case _:
-                    return None
-        case "agreement" | "disagreement_negation":
-            match version:
-                case "unambiguous_covered":
-                    return "Yes"
-                case "unambiguous_uncovered":
-                    return "No"
-                case _:
-                    return None
-        case "agreement_negation" | "disagreement":
-            match version:
-                case "unambiguous_covered":
-                    return "No"
-                case "unambiguous_uncovered":
-                    return "Yes"
-                case _:
-                    return None
-
+        case "yes_or_no" | "no_or_yes" | "agreement" | "disagreement_negation":
+            return "Yes_prob", "No_prob"
+        case "disagreement" | "agreement_negation":
+            return "No_prob", "Yes_prob"
         case "options":
-            match version:
-                case "unambiguous_covered":
-                    return "A"
-                case "unambiguous_uncovered":
-                    return "B"
-                case _:
-                    return None
-
+            return "A_prob", "B_prob"
         case "options_flipped":
-            match version:
-                case "unambiguous_covered":
-                    return "B"
-                case "unambiguous_uncovered":
-                    return "A"
-                case _:
-                    return None
+            return "B_prob", "A_prob"
         case _:
-            return None
+            raise ValueError()
+
+def organize_distribution(model_results):
+    model_results["Yes_prob"] = np.exp(model_results["Yes_prob"].values)
+    model_results["No_prob"] = np.exp(model_results["No_prob"].values)
+    model_results["Other_prob"] = 1 - model_results["Yes_prob"] - model_results["No_prob"]
+
+    for group, indices in model_results.groupby("prompt_type").indices.items():
+        aff_column, unaff_column = get_aff_unaff_columns(group)
+        model_results.loc[indices, "Aff_Prob"] = model_results[aff_column][indices]
+        model_results.loc[indices, "UnAff_Prob"] = model_results[unaff_column][indices]
+
+    return model_results
+
+def get_divergences(model_results):
+    divergences = {
+        "title": list(),
+        "version": list(),
+        "prompt_type": list(),
+        "kl_div": list(),
+    }
+    # control and variation pairs
+    for group, df in model_results.groupby(['title', 'version'], sort=False):
+        control_mask = df.prompt_type == "yes_or_no"
+        control_probs = df[["Aff_Prob", "UnAff_Prob", "Other_prob"]][control_mask]
+        for variation in prompt_types[1:6]:
+            variation_mask = df.prompt_type == variation
+            variation_probs = df[["Aff_Prob", "UnAff_Prob", "Other_prob"]][variation_mask]
+            kl_div = sp.special.kl_div(control_probs.values, variation_probs.values)
+            divergences["title"].append(group[0])
+            divergences["version"].append(group[1])
+            divergences["prompt_type"].append(variation)
+            divergences["kl_div"].append(kl_div.mean())
+
+    return pd.DataFrame.from_dict(divergences)
 
 
+def get_divergences_for_prompt_type(divergences):
+    return divergences.groupby('prompt_type', sort=False).apply(lambda x: x.kl_div.mean(),
+                                                         include_groups=False).to_frame().rename(
+        columns={0: "mean_divergence"})
 
+def get_divergences_for_items(divergences):
+    return divergences.groupby('title', sort=False).apply(lambda x: x.kl_div.mean(),
+                                                          include_groups=False).to_frame().rename(
+        columns={0: "mean_divergence"})
 
+def get_item_divergences(divergences):
+    return divergences.groupby(['title', 'version'], sort=False, as_index=False).apply(lambda x: x.kl_div.mean(), include_groups=False).rename(
+        columns={None: "mean_divergence"})
 
+def get_version_divergences_for_items(divergences):
+    return
 
-
-
-
-def get_prompt_type_corrects(prompt_type, results):
-    pt_results = results[results["prompt_type"] == prompt_type]
-    # 1/0 encoding 1 is correct 0 is incorrect
-    return pt_results["target"] == pt_results["output"]
-
-
-def get_prompt_type_results(prompt_type, results):
-    pt_results = results[results["prompt_type"] == prompt_type]
-    corrects = get_prompt_type_corrects(prompt_type, results)
-    return corrects, np.logical_not(corrects), pt_results.output.value_counts()
 
