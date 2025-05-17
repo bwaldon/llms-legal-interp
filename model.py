@@ -7,30 +7,39 @@ from transformers import AutoTokenizer
 class MetaLinguisticJudgement:
     def __init__(self, model_name, seed, max_model_len=256):
         self.model_name = model_name
-        self.infer_params = SamplingParams(temperature=0.8, top_p=0.95, max_tokens=256, seed=seed)
-        self.logprob_params = SamplingParams(temperature=0.8, top_p=0.95, max_tokens=1, seed=seed, prompt_logprobs=True)
+        self.infer_params = SamplingParams(
+            temperature=0.8,
+            top_p=0.95,
+            max_tokens=64,
+            seed=seed)
+        self.logprob_params = SamplingParams(
+            temperature=0.8,
+            top_p=0.95,
+            max_tokens=1,
+            seed=seed,
+            logprobs=1,
+            prompt_logprobs=True
+        )
         self.max_model_len = max_model_len
         self.llm = LLM(
             model_name,
             max_model_len=max_model_len,
             seed=seed,
             dtype="float16",
-            gpu_memory_utilization=0.95,
+            gpu_memory_utilization=0.85,
             max_num_seqs=8,
-            swap_space=8,
+            swap_space=2,
         )
 
-    def infer(self, prompts: List[MetaLinguisticPrompt]) -> List[CompletionOutput]:
+    def infer(self, prompts: List[str]) -> List[CompletionOutput]:
         outputs = self.llm.generate(prompts, self.infer_params)
         return [output.outputs[0] for output in outputs]
 
     def probs(self, prompts: List[str]) -> Tuple[List, List, List, List]:
         prompts_with_token = []
         for p in prompts:
-            # if 'mc_prompt_reverse' in p.features or 'mc_prompt_reverse' in p.features:
-            #     prompts_with_token += [p.text + 'A', p.text + 'B']
-
             prompts_with_token += [p + ' Yes', p + ' No', p + " A", p + " B"]
+        self.llm.llm_engine.max_num_seqs = 1
         outputs = self.llm.generate(prompts_with_token, self.logprob_params)
 
         tokenizer = self.llm.get_tokenizer()

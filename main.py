@@ -17,6 +17,8 @@ from prompts import get_dataset_for_coverage_questions
 from model import MetaLinguisticPrompt, MetaLinguisticJudgement
 from datasets import Dataset
 
+
+
 def print_logprobs(logprobs):
     for prompt_logprobs in logprobs:
         print(type(prompt_logprobs), prompt_logprobs)
@@ -70,38 +72,27 @@ def get_prompts():
 """
 # Interactive snippet for inference
 prompt = get_dataset_for_coverage_questions()[0]['prompt']
-model = MetaLinguisticJudgement("meta-llama/Llama-3.2-8B", 42)
+model = MetaLinguisticJudgement("meta-llama/Llama-3.1-8B", 42)
 output = model.infer([prompt])
-logprobs = model.probs([prompt])
-    """
+yes_logprobs, no_logprobs, a_logprobs, b_logprobs = model.probs([prompt])
+"""
 
 
-def load_and_infer_with_model(model_name, seed, dataset, tokens_of_interest=("Yes", "No", "A", "B")):
+def load_and_infer_with_model(model_name, seed, dataset):
     def model_cleanup():
         torch.cuda.empty_cache()
         gc.collect()
 
-
     print(model_name + "\n")
 
     model = MetaLinguisticJudgement(model_name, seed)
-    def get_token_ids_of_interest(tokens_of_interest, vocab):
-        token_ids = dict()
-        for token in tokens_of_interest:
-            token_ids[token] =  None #list()
-            if token in vocab:
-                token_ids[token] = (vocab[token])
-
-            # if token.lower() in vocab:
-            #     token_ids[token].append(vocab[token.lower()])
-        return token_ids
 
     def extract_first_answer_token(text):
         return [x.strip("\"'\.!") for x in re.split(r"([a-zA-z]+)?\s+", text) if x][0]
 
-    token_ids_of_interest = get_token_ids_of_interest(tokens_of_interest, model.llm.get_tokenizer().get_vocab())
     prompts = dataset["prompt"]
-    outputs = model.infer(prompts)
+    # outputs = model.infer(prompts)
+    model_cleanup()
     yes_logprobs, no_logprobs, a_logprobs, b_logprobs = model.probs(prompts)
 
     results_dict = {
@@ -130,7 +121,7 @@ def hf_auth_check(model_list):
         auth_check(model)
 
 
-def test(seed):
+def _test(seed):
     prompts_dataset = Dataset.from_dict(get_dataset_for_coverage_questions()[:2])
     for model_name in ["meta-llama/Llama-3.1-8B-Instruct"]:
         results_dict = load_and_infer_with_model(model_name, seed, prompts_dataset)
@@ -159,7 +150,7 @@ if __name__ == "__main__":
     parser.add_argument("--test", default=False, action="store_true")
     args = parser.parse_args()
     if args.test:
-        test(args.seed)
+        _test(args.seed)
         exit(1)
 
     main(args.seed)
