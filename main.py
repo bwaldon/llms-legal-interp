@@ -113,7 +113,7 @@ def load_and_infer_with_model(model_name, seed, dataset, tokens_of_interest=("Ye
 
             for position, logprobs in enumerate(output.logprobs[:n]):
                 for token, token_id in token_ids_of_interest.items():
-                    tokens_probs[token] = logprobs[token_id].logprob if token_id in logprobs else 0
+                    tokens_probs[token] = logprobs[token_id].logprob if token_id in logprobs else np.nan
             return tokens_probs
 
         print(f"Dataset : {len(dataset)} {len(outputs)}")
@@ -151,7 +151,7 @@ def hf_auth_check(model_list):
 
 
 def test(seed):
-    prompts_dataset = Dataset.from_dict(get_dataset_for_coverage_questions()[:2])
+    prompts_dataset = Dataset.from_dict(get_dataset_for_coverage_questions()[:9])
     for model_name in ["meta-llama/Llama-3.1-8B-Instruct"]:
         results_dict = load_and_infer_with_model(model_name, seed, prompts_dataset)
         results = Dataset.from_dict(results_dict)
