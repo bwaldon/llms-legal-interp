@@ -45,9 +45,6 @@ model_list = [
     "gpt2-medium",
     "gpt2-large",
     "gpt2-xl",
-    "bigscience/bloom-560m",
-    "bigscience/bloom-1b1",
-    "bigscience/bloom-3b",
     "allenai/OLMo-2-0425-1B",
     "allenai/OLMo-2-0425-1B-Instruct",
     "allenai/OLMo-2-1124-7B",
@@ -96,7 +93,11 @@ def load_and_infer_with_model(model_name, seed, dataset):
     model = MetaLinguisticJudgement(model_name, seed)
 
     def extract_first_answer_token(text):
-        return [x.strip("\"'\.!") for x in re.split(r"([a-zA-z]+)?\s+", text) if x][0]
+        tokens = [x.strip("\"'\.!") for x in re.split(r"([a-zA-z]+)?\s+", text) if x]
+        if not tokens:
+            print(f"⚠️ Warning: No valid tokens extracted from: {repr(text)}")
+            return ""
+        return tokens[0]
 
     prompts = dataset["prompt"]
     outputs = model.infer(prompts)
