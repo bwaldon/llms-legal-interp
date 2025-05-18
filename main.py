@@ -20,8 +20,6 @@ import os
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
-
-
 def print_logprobs(logprobs):
     for prompt_logprobs in logprobs:
         print(type(prompt_logprobs), prompt_logprobs)
@@ -50,7 +48,7 @@ model_list = [
     "allenai/OLMo-2-1124-7B",
     "allenai/OLMo-2-1124-7B-Instruct",
     "ministral/Ministral-3b-instruct",
-    "mistralai/Ministral-4b-Instruct",
+    "ministral/Ministral-4b-instruct",
     "mistralai/Ministral-8B-Instruct-2410",
     "google/gemma-1b-it",
     "google/gemma-4b-it",

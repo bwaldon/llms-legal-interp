@@ -24,6 +24,8 @@ class MetaLinguisticJudgement:
             max_model_len = 256
         elif 'bloom' in model_name:
             max_model_len = 224
+        elif 'ministral' in model_name:
+            max_model_len = 240
         if 'bloom' in model_name:
             gpu_memory_utilization = 0.3
         else:
