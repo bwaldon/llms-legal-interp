@@ -149,12 +149,15 @@ def main(seed):
         results_dict = load_and_infer_with_model(model_name, seed, prompts_dataset)
         # TODO see if we should just make it pyarrow
         results = Dataset.from_dict(results_dict)
+        # TODO parameterize with seed
         print(f"For {model_name} results :{results}")
+
         results.to_csv(f"runs-{seed}/{model_name}-results.csv", index=False)
         del results
         del results_dict
         torch.cuda.empty_cache()
         gc.collect()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
