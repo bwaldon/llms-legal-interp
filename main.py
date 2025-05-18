@@ -43,15 +43,20 @@ model_list = [
     "meta-llama/Llama-3.1-8B",
     "meta-llama/Llama-3.1-8B-Instruct",
     "gpt2-medium",
-    "gpt2-large"
+    "gpt2-large",
     "gpt2-xl",
     "bigscience/bloom-560m",
     "bigscience/bloom-1b1",
     "bigscience/bloom-3b",
-    "bigscience/bloom-7b1",
+    "allenai/OLMo-2-0425-1B",
+    "allenai/OLMo-2-0425-1B-Instruct",
     "allenai/OLMo-2-1124-7B",
     "allenai/OLMo-2-1124-7B-Instruct",
+    "ministral/Ministral-3b-instruct",
+    "mistralai/Ministral-4b-Instruct",
     "mistralai/Ministral-8B-Instruct-2410",
+    "google/gemma-1b-it",
+    "google/gemma-4b-it",
     "google/gemma-7b-it"
 ]
 
@@ -142,9 +147,10 @@ def main(seed):
         # TODO see if we should just make it pyarrow
         results = Dataset.from_dict(results_dict)
         print(f"For {model_name} results :{results}")
-        results.to_csv(f"runs/{model_name}-results.csv", index=False)
+        results.to_csv(f"runs-{seed}/{model_name}-results.csv", index=False)
         del results
         del results_dict
+        torch.cuda.empty_cache()
         gc.collect()
 
 if __name__ == "__main__":

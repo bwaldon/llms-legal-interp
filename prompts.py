@@ -146,7 +146,7 @@ def coverage_disagreement_on_negation(contract):
 def coverage_options(contract):
     return f"""{contract['header']}
         {contract['continuation']}
-    {locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question(contract['person_name'])} Options: A. {contract['person_name']} is covered. B. {contract['person_name']} is not covered. {ANSWER_TRIGGER}:"""
+    {locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question(contract['person_name'])} Options: A. {contract['person_name']} is covered. B. {contract['person_name']} is not covered. {ANSWER_TRIGGER}"""
 
 def coverage_options_flipped(contract):
     return f"""{contract['header']}

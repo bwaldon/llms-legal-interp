@@ -11,4 +11,4 @@
 #SBATCH --mail-type=END,FAIL
 
 source env.sh
-python main.py >> infer.log
+python main.py --seed 1 >> infer-1.log
