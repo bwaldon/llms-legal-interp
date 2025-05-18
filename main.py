@@ -111,6 +111,7 @@ def load_and_infer_with_model(model_name, seed, dataset):
         "version": dataset["version"],
         "output": [extract_first_answer_token(output.text) for output in outputs],
         "output_text": [output.text for output in outputs],
+        "cum_logprob": [output.cumulative_logprob for output in outputs],
         "Yes_probs": yes_logprobs,
         "No_probs": no_logprobs,
         "A_probs": a_logprobs,
@@ -130,8 +131,9 @@ def hf_auth_check(model_list):
         auth_check(model)
 
 
+
 def _test(seed):
-    prompts_dataset = Dataset.from_dict(get_dataset_for_coverage_questions()[:2])
+    prompts_dataset = Dataset.from_dict(get_dataset_for_coverage_questions()[:9])
     for model_name in ["meta-llama/Llama-3.1-8B-Instruct"]:
         results_dict = load_and_infer_with_model(model_name, seed, prompts_dataset)
         results = Dataset.from_dict(results_dict)
