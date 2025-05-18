@@ -5,7 +5,7 @@ from transformers import AutoTokenizer
 
 
 class MetaLinguisticJudgement:
-    def __init__(self, model_name, seed, max_model_len=256):
+    def __init__(self, model_name, seed, max_model_len=216):
         self.model_name = model_name
         self.infer_params = SamplingParams(
             temperature=0.8,
@@ -28,7 +28,6 @@ class MetaLinguisticJudgement:
             dtype="float16",
             gpu_memory_utilization=0.85,
             max_num_seqs=8,
-            swap_space=2,
         )
 
     def infer(self, prompts: List[str]) -> List[CompletionOutput]:

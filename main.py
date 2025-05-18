@@ -16,6 +16,9 @@ import torch
 from prompts import get_dataset_for_coverage_questions
 from model import MetaLinguisticPrompt, MetaLinguisticJudgement
 from datasets import Dataset
+import os
+
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
 
 
@@ -91,7 +94,7 @@ def load_and_infer_with_model(model_name, seed, dataset):
         return [x.strip("\"'\.!") for x in re.split(r"([a-zA-z]+)?\s+", text) if x][0]
 
     prompts = dataset["prompt"]
-    # outputs = model.infer(prompts)
+    outputs = model.infer(prompts)
     model_cleanup()
     yes_logprobs, no_logprobs, a_logprobs, b_logprobs = model.probs(prompts)
 
