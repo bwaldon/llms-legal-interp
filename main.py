@@ -16,6 +16,11 @@ import torch
 from prompts import get_dataset_for_coverage_questions
 from model import MetaLinguisticPrompt, MetaLinguisticJudgement
 from datasets import Dataset
+import os
+
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
+
 
 def print_logprobs(logprobs):
     for prompt_logprobs in logprobs:
@@ -38,15 +43,17 @@ model_list = [
     "meta-llama/Llama-3.1-8B",
     "meta-llama/Llama-3.1-8B-Instruct",
     "gpt2-medium",
-    # "gpt2-large" fails at 2 prompts,  logbrobs 16
-    # "gpt2-xl", fails at 2 prompts,  logbrobs 16
-    #"bigscience/bloom-560m", Works
-    #"bigscience/bloom-1b1", fails at 2 prompts, logbrobs 16
-    #"bigscience/bloom-3b",  fails at 2 prompts, logbrobs 16
-    #"bigscience/bloom-7b1", fails at 2 prompts, logbrobs 16
+    "gpt2-large",
+    "gpt2-xl",
+    "allenai/OLMo-2-0425-1B",
+    "allenai/OLMo-2-0425-1B-Instruct",
     "allenai/OLMo-2-1124-7B",
     "allenai/OLMo-2-1124-7B-Instruct",
+    "ministral/Ministral-3b-instruct",
+    "mistralai/Ministral-4b-Instruct",
     "mistralai/Ministral-8B-Instruct-2410",
+    "google/gemma-1b-it",
+    "google/gemma-4b-it",
     "google/gemma-7b-it"
 ]
 
@@ -69,78 +76,51 @@ def get_prompts():
     ]
 """
 # Interactive snippet for inference
-prompt = get_dataset_for_coverage_questions()[0]
-model = MetaLinguisticJudgement("meta-llama/Llama-3.2-8B", 42)
+prompt = get_dataset_for_coverage_questions()[0]['prompt']
+model = MetaLinguisticJudgement("meta-llama/Llama-3.1-8B", 42)
 output = model.infer([prompt])
-    """
+yes_logprobs, no_logprobs, a_logprobs, b_logprobs = model.probs([prompt])
+"""
 
 
-def load_and_infer_with_model(model_name, seed, dataset, tokens_of_interest=("Yes", "No", "A", "B")):
+def load_and_infer_with_model(model_name, seed, dataset):
     def model_cleanup():
         torch.cuda.empty_cache()
         gc.collect()
 
-
     print(model_name + "\n")
 
     model = MetaLinguisticJudgement(model_name, seed)
-    def get_token_ids_of_interest(tokens_of_interest, vocab):
-        token_ids = dict()
-        for token in tokens_of_interest:
-            token_ids[token] =  None #list()
-            if token in vocab:
-                token_ids[token] = (vocab[token])
 
-            # if token.lower() in vocab:
-            #     token_ids[token].append(vocab[token.lower()])
-        return token_ids
+    def extract_first_answer_token(text):
+        tokens = [x.strip("\"'\.!") for x in re.split(r"([a-zA-z]+)?\s+", text) if x]
+        if not tokens:
+            print(f"⚠️ Warning: No valid tokens extracted from: {repr(text)}")
+            return ""
+        return tokens[0]
 
-    token_ids_of_interest = get_token_ids_of_interest(tokens_of_interest, model.llm.get_tokenizer().get_vocab())
     prompts = dataset["prompt"]
     outputs = model.infer(prompts)
+    model_cleanup()
+    yes_logprobs, no_logprobs, a_logprobs, b_logprobs = model.probs(prompts)
 
-    # Collate data and outputs
-    def collate_data_and_outputs(model_name, dataset, outputs):
-
-        # https://stackoverflow.com/questions/43647186/tokenize-based-on-white-space-and-trailing-punctuation
-        def extract_first_answer_token(text):
-            return [x.strip("\"'\.!") for x in re.split(r"([a-zA-z]+)?\s+", text) if x][0]
-
-        def collate_logprobs_for_tokens_of_interest(n, token_ids_of_interest, output):
-            tokens_probs = dict()
-            #for token in token_ids_of_interest:
-            #    tokens_probs[token] = np.ndarray((n, 1))
-
-            for position, logprobs in enumerate(output.logprobs[:n]):
-                for token, token_id in token_ids_of_interest.items():
-                    tokens_probs[token] = logprobs[token_id].logprob if token_id in logprobs else 0
-            return tokens_probs
-
-        print(f"Dataset : {len(dataset)} {len(outputs)}")
-        # Just get the probs for the output
-        # TODO batched processing
-        seq_len_to_search = 1
-        results_token_probs = [collate_logprobs_for_tokens_of_interest(seq_len_to_search, token_ids_of_interest, output) for output in outputs]
-        results_dict = {
-            "title": dataset["title"],
-            "prompt_type": dataset["prompt_type"],
-            "prompt": dataset["prompt"],
-            "version": dataset["version"],
-            "output": [extract_first_answer_token(output.text) for output in outputs],
-            "output_text": [output.text for output in outputs],
-            "cum_logprob": [output.cumulative_logprob for output in outputs]
-        }
-
-        results_dict["Yes_prob"] = [token_probs["Yes"] for token_probs in results_token_probs]
-        results_dict["No_prob"] = [token_probs["No"] for token_probs in results_token_probs]
-        results_dict["A_prob"] = [token_probs["A"] for token_probs in results_token_probs]
-        results_dict["B_prob"] = [token_probs["B"] for token_probs in results_token_probs]
-        return results_dict
+    results_dict = {
+        "title": dataset["title"],
+        "prompt_type": dataset["prompt_type"],
+        "prompt": dataset["prompt"],
+        "version": dataset["version"],
+        "output": [extract_first_answer_token(output.text) for output in outputs],
+        "output_text": [output.text for output in outputs],
+        "cum_logprob": [output.cumulative_logprob for output in outputs],
+        "Yes_probs": yes_logprobs,
+        "No_probs": no_logprobs,
+        "A_probs": a_logprobs,
+        "B_probs": b_logprobs,
+    }
 
     del model
     model_cleanup()
-
-    return collate_data_and_outputs(model_name, dataset, outputs)
+    return results_dict
 
 # class OutputType(Enum):
 #     TEXT = "text"
@@ -151,8 +131,9 @@ def hf_auth_check(model_list):
         auth_check(model)
 
 
-def test(seed):
-    prompts_dataset = Dataset.from_dict(get_dataset_for_coverage_questions()[:2])
+
+def _test(seed):
+    prompts_dataset = Dataset.from_dict(get_dataset_for_coverage_questions()[:9])
     for model_name in ["meta-llama/Llama-3.1-8B-Instruct"]:
         results_dict = load_and_infer_with_model(model_name, seed, prompts_dataset)
         results = Dataset.from_dict(results_dict)
@@ -170,10 +151,13 @@ def main(seed):
         results = Dataset.from_dict(results_dict)
         # TODO parameterize with seed
         print(f"For {model_name} results :{results}")
-        results.to_csv(f"runs/{model_name}-results.csv", index=False)
-        # del results
-        # del results_dict
-        # gc.collect()
+
+        results.to_csv(f"runs-{seed}/{model_name}-results.csv", index=False)
+        del results
+        del results_dict
+        torch.cuda.empty_cache()
+        gc.collect()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -181,7 +165,7 @@ if __name__ == "__main__":
     parser.add_argument("--test", default=False, action="store_true")
     args = parser.parse_args()
     if args.test:
-        test(args.seed)
+        _test(args.seed)
         exit(1)
 
     main(args.seed)
