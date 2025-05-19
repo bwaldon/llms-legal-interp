@@ -47,9 +47,9 @@ model_list = [
     "allenai/OLMo-2-0425-1B-Instruct",
     "allenai/OLMo-2-1124-7B",
     "allenai/OLMo-2-1124-7B-Instruct",
-    #"ministral/Ministral-3b-instruct",
-    #"ministral/Ministral-4b-instruct",
-    #"mistralai/Ministral-8B-Instruct-2410",
+    "ministral/Ministral-3b-instruct",
+    "ministral/Ministral-4b-instruct",
+    "mistralai/Ministral-8B-Instruct-2410",
     "google/gemma-3-1b-it",
     "google/gemma-3-4b-it",
     "google/gemma-7b-it"
