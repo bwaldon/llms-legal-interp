@@ -50,8 +50,8 @@ model_list = [
     "ministral/Ministral-3b-instruct",
     "ministral/Ministral-4b-instruct",
     "mistralai/Ministral-8B-Instruct-2410",
-    "google/gemma-1b-it",
-    "google/gemma-4b-it",
+    "google/gemma-3-1b-it",
+    "google/gemma-3-4b-it",
     "google/gemma-7b-it"
 ]
 
