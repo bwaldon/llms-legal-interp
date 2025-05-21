@@ -65,11 +65,12 @@ def calculate_relative_measures(model_results):
 
         reversal_probs = df[["UnAff_prob", "Aff_prob", "Other_prob"]][control_mask]
         reversal_dists = np.array([sp.spatial.distance.jensenshannon(x, y) for x, y in zip(control_probs.values, reversal_probs.values)])
-        for variation in prompt_types[1:]:
-            relative_measures["title"].append(group[0])
-            relative_measures["version"].append(group[1])
-            relative_measures["prompt_type"].append(variation)
+        relative_measures["title"].extend(df["title"][1:])
+        relative_measures["version"].extend(df["version"][1:])
+        relative_measures["model_name"].extend(df["model_name"][1:])
 
+        for variation in prompt_types[1:]:
+            relative_measures["prompt_type"].append(variation)
             variation_mask = df.prompt_type == variation
             variation_probs = df[["Aff_prob", "UnAff_prob", "Other_prob"]][variation_mask]
             # TODO numpy it
@@ -78,7 +79,6 @@ def calculate_relative_measures(model_results):
             # Jensen-Shannon Distance
             js_dist = sp.spatial.distance.jensenshannon(control_probs.values, variation_probs.values, axis=1).mean()
             relative_measures["js_dist"].append(js_dist)
-
             more_than_reversal = js_dist > reversal_dists
             relative_measures["more_than_reversal"].append(more_than_reversal.mean())
     df = pd.DataFrame.from_dict(relative_measures)
