@@ -43,6 +43,10 @@ def organize_distribution(model_results):
         model_results["Covered_prob"], model_results["NotCovered_prob"] = normalize(model_results["Aff_prob"], model_results["UnAff_prob"])
         model_results["Covered"] = model_results["Aff_prob"] > model_results["UnAff_prob"]
         model_results["NotCovered"] = model_results["Aff_prob"] <= model_results["UnAff_prob"]
+        model_results["Answer"] = ""
+        model_results.loc[model_results["Covered"], "Answer"] = "Covered"
+        model_results.loc[model_results["NotCovered"], "Answer"] = "NotCovered"
+
 
     model_results["entropy"] = model_results[["Aff_prob", "UnAff_prob", "Other_prob"]].apply(lambda x: sp.stats.entropy(x), axis=1)
 
@@ -83,6 +87,11 @@ def calculate_relative_measures(model_results):
             relative_measures["more_than_reversal"].append(more_than_reversal.mean())
     df = pd.DataFrame.from_dict(relative_measures)
     return df
+
+def calculate_item_measures(model_results):
+    return model_results.groupby(['title', 'version', 'model_name'], as_index=False, sort=False).agg(
+        {'Answer': [pd.Series.mode, lambda x: (x.value_counts().values[0]) / x.shape[0]]}
+    )
 
 
 def get_distances_for_prompt_type(distances):
