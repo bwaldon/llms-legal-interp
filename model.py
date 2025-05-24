@@ -61,6 +61,7 @@ class MetaLinguisticJudgement:
 
         tokenizer = self.llm.get_tokenizer()
         yes_token_id = tokenizer(" Yes")["input_ids"][-1]
+        # yes_token_ids = [t[-1] for t in tokenizer.batch_encode_plus([" Yes", "yes", "Yes", " yes"])["input_ids"]]
         no_token_id = tokenizer(" No")["input_ids"][-1]
         a_token_id = tokenizer(" A")["input_ids"][-1]
         b_token_id = tokenizer(" B")["input_ids"][-1]
