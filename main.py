@@ -90,15 +90,9 @@ def load_and_infer_with_model(model_name, seed, dataset):
 
     model = MetaLinguisticJudgement(model_name, seed)
 
-    def extract_first_answer_token(text):
-        tokens = [x.strip("\"'\.!") for x in re.split(r"([a-zA-z]+)?\s+", text) if x]
-        if not tokens:
-            print(f"⚠️ Warning: No valid tokens extracted from: {repr(text)}")
-            return ""
-        return tokens[0]
-
     prompts = dataset["prompt"]
     outputs = model.infer(prompts)
+    tokenizer = model.llm.get_tokenizer()
     model_cleanup()
     yes_logprobs, no_logprobs, a_logprobs, b_logprobs = model.probs(prompts)
 
@@ -107,7 +101,7 @@ def load_and_infer_with_model(model_name, seed, dataset):
         "prompt_type": dataset["prompt_type"],
         "prompt": dataset["prompt"],
         "version": dataset["version"],
-        "output": [extract_first_answer_token(output.text) for output in outputs],
+        "output": tokenizer.batch_decode([output.token_ids[0] for output in outputs]),
         "output_text": [output.text for output in outputs],
         "cum_logprob": [output.cumulative_logprob for output in outputs],
         "Yes_probs": yes_logprobs,
@@ -119,10 +113,6 @@ def load_and_infer_with_model(model_name, seed, dataset):
     del model
     model_cleanup()
     return results_dict
-
-# class OutputType(Enum):
-#     TEXT = "text"
-#     LOGPROBS = "logprobs"
 
 def hf_auth_check(model_list):
     for model in model_list:
@@ -162,6 +152,8 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--test", default=False, action="store_true")
     args = parser.parse_args()
+
+    args.test = True
     if args.test:
         _test(args.seed)
         exit(1)
