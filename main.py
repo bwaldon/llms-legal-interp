@@ -153,7 +153,6 @@ if __name__ == "__main__":
     parser.add_argument("--test", default=False, action="store_true")
     args = parser.parse_args()
 
-    args.test = True
     if args.test:
         _test(args.seed)
         exit(1)
