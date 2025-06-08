@@ -1,6 +1,7 @@
 import pandas as pd
 
 from prompts import prompt_types
+from fractions import Fraction
 import numpy as np
 import scipy as sp
 
@@ -43,9 +44,18 @@ def organize_distribution(model_results):
         model_results["Covered_prob"], model_results["NotCovered_prob"] = normalize(model_results["Aff_prob"], model_results["UnAff_prob"])
         model_results["Covered"] = model_results["Aff_prob"] > model_results["UnAff_prob"]
         model_results["NotCovered"] = model_results["Aff_prob"] <= model_results["UnAff_prob"]
+
         model_results["Answer"] = ""
+        model_results["Answer_prob"] = np.nan
+
         model_results.loc[model_results["Covered"], "Answer"] = "Covered"
+        model_results.loc[model_results["Covered"], "Answer_prob"] = model_results["Covered_prob"][model_results["Covered"]]
+
         model_results.loc[model_results["NotCovered"], "Answer"] = "NotCovered"
+        model_results.loc[model_results["NotCovered"], "Answer_prob"] =  model_results["NotCovered_prob"][model_results["NotCovered"]]
+
+
+
 
 
     model_results["entropy"] = model_results[["Aff_prob", "UnAff_prob", "Other_prob"]].apply(lambda x: sp.stats.entropy(x), axis=1)
@@ -89,9 +99,15 @@ def calculate_relative_measures(model_results):
     return df
 
 def calculate_item_measures(model_results):
-    return model_results.groupby(['title', 'version', 'model_name'], as_index=False, sort=False).agg(
-        {'Answer': [pd.Series.mode, lambda x: (x.value_counts().values[0]) / x.shape[0]]}
+    mode_agg = pd.NamedAgg(column="Answer", aggfunc=lambda x: x.mode())
+    proportion_agg = pd.NamedAgg(
+        column="Answer",
+        aggfunc=lambda x: x.value_counts().values[0])
+    mean_answer_prob = pd.NamedAgg(column="Answer_prob", aggfunc="mean")
+    model_results = model_results.groupby(['title', 'version', 'model_name'], as_index=False, sort=False).agg(
+        Answer_Mode=mode_agg, Answer_Votes=proportion_agg, Answer_Prob=mean_answer_prob
     )
+    return model_results
 
 
 def get_distances_for_prompt_type(distances):
