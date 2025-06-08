@@ -91,8 +91,9 @@ def load_and_infer_with_model(model_name, seed, dataset):
     model = MetaLinguisticJudgement(model_name, seed)
 
     prompts = dataset["prompt"]
-    outputs = model.infer(prompts)
+    # TODO combine probability extraction and relevant tokens into a single flow
     tokenizer = model.llm.get_tokenizer()
+    outputs = model.infer(prompts)
     model_cleanup()
     yes_logprobs, no_logprobs, a_logprobs, b_logprobs = model.probs(prompts)
 
