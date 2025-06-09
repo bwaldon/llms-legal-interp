@@ -8,12 +8,12 @@ class MetaLinguisticJudgement:
     def __init__(self, model_name, seed, max_model_len=216):
         self.model_name = model_name
         self.infer_params = SamplingParams(
-            temperature=0.8,
+            temperature=0,
             top_p=0.95,
             max_tokens=64,
             seed=seed)
         self.logprob_params = SamplingParams(
-            temperature=0.8,
+            temperature=0,
             top_p=0.95,
             max_tokens=1,
             seed=seed,
