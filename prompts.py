@@ -134,7 +134,7 @@ def coverage_binary_question_negation(contract):
     # list for HF
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, {is_person_not_covered_question(contract['person_name'])}? {YES_NO_QUESTION}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {is_person_not_covered_question(contract['person_name'])} {YES_NO_QUESTION}"""
 
 def coverage_agreement(contract):
     return f"""{contract['header']}
