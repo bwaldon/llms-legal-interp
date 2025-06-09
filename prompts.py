@@ -112,7 +112,7 @@ def coverage_binary_question(binary_question_suffix, contract):
     # list for HF
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question(contract['person_name'])}? {binary_question_suffix}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question(contract['person_name'])} {binary_question_suffix}"""
 
 
 ANSWER_TRIGGER="Final answer is:"
@@ -139,25 +139,25 @@ def coverage_binary_question_negation(contract):
 def coverage_agreement(contract):
     return f"""{contract['header']}
     {contract['continuation']}
-    {locus_premise(contract['locus_of_uncertainty'])}, {contract['person_name']} is covered by the insurance. Do you agree? {YES_NO_QUESTION} {ANSWER_TRIGGER}"""
+    {locus_premise(contract['locus_of_uncertainty'])}, {contract['person_name']} is covered by the insurance. Do you agree? {YES_NO_QUESTION}"""
 
 
 def coverage_agreement_on_negation(contract):
     return f"""{contract['header']}
     {contract['continuation']}
-    {locus_premise(contract['locus_of_uncertainty'])}, {contract['person_name']} is not covered by the insurance. Do you agree? {YES_NO_QUESTION} {ANSWER_TRIGGER}"""
+    {locus_premise(contract['locus_of_uncertainty'])}, {contract['person_name']} is not covered by the insurance. Do you agree? {YES_NO_QUESTION}"""
 
 
 def coverage_disagreement(contract):
     return f"""{contract['header']}
     {contract['continuation']}
-    {locus_premise(contract['locus_of_uncertainty'])}, {contract['person_name']} is covered by the insurance. Do you disagree? {YES_NO_QUESTION} {ANSWER_TRIGGER}"""
+    {locus_premise(contract['locus_of_uncertainty'])}, {contract['person_name']} is covered by the insurance. Do you disagree? {YES_NO_QUESTION}"""
 
 
 def coverage_disagreement_on_negation(contract):
     return f"""{contract['header']}
     {contract['continuation']}
-    {locus_premise(contract['locus_of_uncertainty'])}, {contract['person_name']} is not covered by the insurance. Do you disagree? {YES_NO_QUESTION} {ANSWER_TRIGGER}"""
+    {locus_premise(contract['locus_of_uncertainty'])}, {contract['person_name']} is not covered by the insurance. Do you disagree? {YES_NO_QUESTION}"""
 
 
 def coverage_options(contract):
