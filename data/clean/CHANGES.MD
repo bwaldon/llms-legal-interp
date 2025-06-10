@@ -1,3 +1,6 @@
+# Changes
+Added double quotes around definition where it was missing
+
 # Notes on changes made to the stimulus data
 * Some header's contain extra e.g. "Emergency," `,` - Not handled
 * Double check quotation around the locuses "Escape of Water" damage, defined as- Not handled
