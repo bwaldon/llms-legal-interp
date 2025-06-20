@@ -9,18 +9,18 @@ from tqdm import tqdm
 
 def locus_premise(locus_of_uncertainty):
     locus_of_uncertainty = locus_of_uncertainty.strip()
-    return f"Considering just how \"{locus_of_uncertainty}\" would be understood by ordinary speakers of English,"
+    return f"Considering just how \"{locus_of_uncertainty}\" would be understood by ordinary speakers of English"
 
 ## Coverage Prompt functions - posing the questions with the proxy of coverage
 def is_person_covered_question_add_on(person_name):
-    return f"is {person_name} covered by the insurance?"
+    return f"is {person_name} covered by the insurance"
 
 
 def coverage_binary_question(binary_question_suffix, contract):
     # list for HF
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question_add_on(contract['person_name'])} {binary_question_suffix}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question_add_on(contract['person_name'])}\u2014{binary_question_suffix}"""
 
 
 ANSWER_TRIGGER="Final answer is:"
@@ -36,47 +36,49 @@ def coverage_binary_question_no_yes(contract):
     return coverage_binary_question(NO_YES_QUESTION, contract)
 
 def is_person_not_covered_question(person_name):
-    return f"Is {person_name} not covered by the insurance—"
+    return f"is {person_name} not covered by the insurance"
 
 def coverage_binary_question_negation(contract):
     # list for HF
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, {is_person_not_covered_question(contract['person_name'])} {YES_NO_QUESTION}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {is_person_not_covered_question(contract['person_name'])}\u2014{YES_NO_QUESTION}"""
+def agree_disagree_question_add_on(agreement: Literal["agree", "disagree"]):
+    return f"do you {agreement} with the following statement"
 
 def coverage_agreement(contract):
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, do you agree with the following statement: "{contract['person_name']}" is covered by the insurance. {YES_NO_QUESTION}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {agree_disagree_question_add_on('agree')}: "{contract['person_name']} is covered by the insurance."\u2014{YES_NO_QUESTION}"""
 
 
 def coverage_agreement_on_negation(contract):
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, Do you agree with the following statement: {contract['person_name']} is not covered by the insurance. {YES_NO_QUESTION}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {agree_disagree_question_add_on('agree')}: "{contract['person_name']} is not covered by the insurance"\u2014{YES_NO_QUESTION}"""
 
 
 def coverage_disagreement(contract):
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, Do you disagree with the following statement: {contract['person_name']} is covered by the insurance. {YES_NO_QUESTION}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {agree_disagree_question_add_on('disagree')}: "{contract['person_name']} is covered by the insurance."\u2014{YES_NO_QUESTION}"""
 
 
 def coverage_disagreement_on_negation(contract):
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, Do you agree with the following statement: {contract['person_name']} is not covered by the insurance. {YES_NO_QUESTION}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {agree_disagree_question_add_on('disagree')}: "{contract['person_name']} is not covered by the insurance." {YES_NO_QUESTION}"""
 
 
 def coverage_options(contract):
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question_add_on(contract['person_name'])} Options: A. {contract['person_name']} is covered. B. {contract['person_name']} is not covered. {ANSWER_TRIGGER}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question_add_on(contract['person_name'])}? Options: A. {contract['person_name']} is covered. B. {contract['person_name']} is not covered. {ANSWER_TRIGGER}"""
 
 def coverage_options_flipped(contract):
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question_add_on(contract['person_name'])} Options: A. {contract['person_name']} is not covered. B. {contract['person_name']} is covered. {ANSWER_TRIGGER}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {is_person_covered_question_add_on(contract['person_name'])}? Options: A. {contract['person_name']} is not covered. B. {contract['person_name']} is covered. {ANSWER_TRIGGER}"""
 
 
 def construct_dataset(prompt_types):
