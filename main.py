@@ -14,7 +14,7 @@ from huggingface_hub import auth_check
 import torch
 
 from prompts import get_dataset_for_coverage_questions
-from model import MetaLinguisticPrompt, MetaLinguisticJudgement
+from model import MetaLinguisticJudgement
 from datasets import Dataset
 import os
 
@@ -55,23 +55,6 @@ model_list = [
     "google/gemma-7b-it"
 ]
 
-def get_prompts():
-    return [
-        MetaLinguisticPrompt(topic="landscaping", features=["question", "bool"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["question", "bool", "reverse"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["arg", "q_agree"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["arg", "q_agree", "neg"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["neg_arg", "q_agree"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["neg_arg", "q_agree", "neg"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["event", "coverage", "q_cover"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["event", "coverage", "neg_q_cover"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["event", "coverage", "judgement", "bool"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["event", "coverage", "judgement", "bool", "reverse"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["event", "coverage", "judgement", "q_agree"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["event", "coverage", "judgement", "q_agree", "neg"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["event", "coverage", "judgement", "mc_prompt"]),
-        MetaLinguisticPrompt(topic="landscaping", features=["event", "coverage", "judgement", "mc_prompt_reverse"])
-    ]
 """
 # Interactive snippet for inference
 prompt = get_dataset_for_coverage_questions()[0]['prompt']

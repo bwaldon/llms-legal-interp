@@ -1,4 +1,3 @@
-from prompts import MetaLinguisticPrompt
 from vllm import LLM, SamplingParams, CompletionOutput
 from typing import List, Tuple
 from transformers import AutoTokenizer
