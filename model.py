@@ -1,7 +1,8 @@
-from vllm import LLM, SamplingParams, CompletionOutput
 from typing import List, Tuple
+from collections import OrderedDict
+import numpy as np
 from transformers import AutoTokenizer
-
+from vllm import LLM, SamplingParams, CompletionOutput
 
 class MetaLinguisticJudgement:
     def __init__(self, model_name, seed, max_model_len=216):
@@ -19,6 +20,7 @@ class MetaLinguisticJudgement:
             logprobs=1,
             prompt_logprobs=True
         )
+        # TODO add reference for these hyperparameters or notes
         if 'gpt' in model_name:
             max_model_len = 256
         elif 'bloom' in model_name:
@@ -43,55 +45,34 @@ class MetaLinguisticJudgement:
         outputs = self.llm.generate(prompts, self.infer_params)
         return [output.outputs[0] for output in outputs]
 
-    def probs(self, prompts: List[str]) -> Tuple[List, List, List, List]:
+    def probs(self, prompts: List[str]) -> dict[str, List[float]]:
         # BLOOM has issues with sentence # 903, 1040
-        if 'bloom' in self.model_name:
-            self.llm.llm_engine.max_num_seqs = 0
-            prompts[903] = "Just a filler sentence. Yes or no?"
-            prompts[1040] = "Just a filler sentence. Yes or no?"
-        else:
-            self.llm.llm_engine.max_num_seqs = 1
+        self.llm.llm_engine.max_num_seqs = 1
 
-        prompts_with_token = []
-        for p in prompts:
-            prompts_with_token += [p + ' Yes', p + ' No', p + " A", p + " B"]
+        SPACE= " "
+        # We use lowercase yes and no in the prompts now.
+        candidates = ['YES', 'Yes', 'yes', 'NO', 'No', 'no', 'A', 'B']
 
+        prompts_with_token = [p + SPACE + answer for p in prompts for answer in candidates]
         outputs = self.llm.generate(prompts_with_token, self.logprob_params)
-
+        # TODO implement sequence probability the same way
         tokenizer = self.llm.get_tokenizer()
-        yes_token_id = tokenizer(" Yes")["input_ids"][-1]
-        # yes_token_ids = [t[-1] for t in tokenizer.batch_encode_plus([" Yes", "yes", "Yes", " yes"])["input_ids"]]
-        no_token_id = tokenizer(" No")["input_ids"][-1]
-        a_token_id = tokenizer(" A")["input_ids"][-1]
-        b_token_id = tokenizer(" B")["input_ids"][-1]
+        MIN_INT = np.iinfo(int).min
+        candidate_tokens = OrderedDict()
+        for candidate in candidates:
+            candidate_tokens[candidate] = tokenizer(SPACE + candidate)["input_ids"][-1]
 
-        yes_logprobs = []
-        no_logprobs = []
-        a_logprobs = []
-        b_logprobs = []
-        for n, output in enumerate(outputs):
-            # BLOOM has issues with sentence # 903
-            if n % 4 == 0:
-                yes_logprob = output.prompt_logprobs[-1][yes_token_id].logprob if output.prompt_logprobs is not None else 0
-                yes_logprobs.append(yes_logprob)
-            elif n % 4 == 1:
-                no_logprob = output.prompt_logprobs[-1][no_token_id].logprob if output.prompt_logprobs is not None else 0
-                no_logprobs.append(no_logprob)
-            elif n % 4 == 2:
-                a_logprob = output.prompt_logprobs[-1][a_token_id].logprob if output.prompt_logprobs is not None else 0
-                a_logprobs.append(a_logprob)
-            elif n % 4 == 3:
-                b_logprob = output.prompt_logprobs[-1][b_token_id].logprob if output.prompt_logprobs is not None else 0
-                b_logprobs.append(b_logprob)
+        # Initialize Dict of Lists (Columnar)
+        candidate_logprobs = OrderedDict()
+        for candidate in candidates:
+            candidate_logprobs[candidate] = list()
 
-        if 'bloom' in self.model_name:
-            yes_logprobs[903] = 0
-            no_logprobs[903] = 0
-            a_logprobs[903] = 0
-            b_logprobs[903] = 0
-            yes_logprobs[1040] = 0
-            no_logprobs[1040] = 0
-            a_logprobs[1040] = 0
-            b_logprobs[1040] = 0
+        for batch_start in range(0, len(outputs), len(candidates)):
+            prompt_batch = outputs[batch_start: batch_start + len(candidates)]
+            for candidate, output in zip(candidates, prompt_batch):
+                token_id = candidate_tokens[candidate]
+                candidate_logprobs[candidate].append(
+                    output.prompt_logprobs[-1][token_id].logprob if output.prompt_logprobs is not None else MIN_INT
+                )
 
-        return yes_logprobs, no_logprobs, a_logprobs, b_logprobs
+        return candidate_logprobs
