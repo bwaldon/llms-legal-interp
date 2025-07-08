@@ -34,24 +34,18 @@ def set_random_seed(seed):
 
 
 model_list = [
+    # Main set of models with instruct divide and size variety
     "meta-llama/Llama-3.2-1B",
     "meta-llama/Llama-3.2-1B-Instruct",
     "meta-llama/Llama-3.2-3B",
     "meta-llama/Llama-3.2-3B-Instruct",
     "meta-llama/Llama-3.1-8B",
     "meta-llama/Llama-3.1-8B-Instruct",
+    # Small reference model - would allow for pretraining variation
     "gpt2-medium",
-    "gpt2-large",
-    "gpt2-xl",
-    "allenai/OLMo-2-0425-1B",
-    "allenai/OLMo-2-0425-1B-Instruct",
-    "allenai/OLMo-2-1124-7B",
+    # Other open models
     "allenai/OLMo-2-1124-7B-Instruct",
-    "ministral/Ministral-3b-instruct",
-    "ministral/Ministral-4b-instruct",
     "mistralai/Ministral-8B-Instruct-2410",
-    "google/gemma-3-1b-it",
-    "google/gemma-3-4b-it",
     "google/gemma-7b-it"
 ]
 
