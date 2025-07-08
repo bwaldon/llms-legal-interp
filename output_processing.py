@@ -27,11 +27,13 @@ def conditional_entropy(PX, PY):
     log_term = np.log(conditional_probs, where=conditional_probs!= 0, out=np.zeros_like(conditional_probs))
     return -np.sum(np.where(joint_probs !=0, joint_probs * log_term, 0)) # scalar
 
+def exponentiate_fields(df, fields):
+    for field in fields:
+        df[field] = df[field].transform(np.exp)
+    return df
+
 def organize_distribution(model_results):
-    model_results["Yes_probs"] = model_results["Yes_probs"].transform(np.exp)
-    model_results["No_probs"] = model_results["No_probs"].transform(np.exp)
-    model_results["A_probs"] = model_results["A_probs"].transform(np.exp)
-    model_results["B_probs"] = model_results["B_probs"].transform(np.exp)
+    model_results = exponentiate_fields(model_results, ["Yes_probs", "No_probs", "A_probs", "B_probs"])
     model_results["Other_prob"] = 1 - model_results["Yes_probs"] - model_results["No_probs"]
 
     for group, indices in model_results.groupby("prompt_type").indices.items():
