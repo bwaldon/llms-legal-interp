@@ -72,7 +72,7 @@ def load_and_infer_with_model(model_name, seed, dataset):
     tokenizer = model.llm.get_tokenizer()
     outputs = model.infer(prompts)
     model_cleanup()
-    yes_logprobs, no_logprobs, a_logprobs, b_logprobs = model.probs(prompts)
+    candidate_logprobs = model.probs(prompts)
 
     results_dict = {
         "title": dataset["title"],
@@ -82,11 +82,10 @@ def load_and_infer_with_model(model_name, seed, dataset):
         "output": tokenizer.batch_decode([output.token_ids[0] for output in outputs]),
         "output_text": [output.text for output in outputs],
         "cum_logprob": [output.cumulative_logprob for output in outputs],
-        "Yes_probs": yes_logprobs,
-        "No_probs": no_logprobs,
-        "A_probs": a_logprobs,
-        "B_probs": b_logprobs,
     }
+
+    for candidate, logprobs in candidate_logprobs.items():
+        results_dict[candidate + "_probs"] = logprobs
 
     del model
     model_cleanup()
