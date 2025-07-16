@@ -44,8 +44,10 @@ model_list = [
     # Small reference model - would allow for pretraining variation
     "gpt2-medium",
     # Other open models
+    "allenai/OLMo-2-1124-7B",
     "allenai/OLMo-2-1124-7B-Instruct",
     "mistralai/Ministral-8B-Instruct-2410",
+    "google/gemma-7b",
     "google/gemma-7b-it"
 ]
 
