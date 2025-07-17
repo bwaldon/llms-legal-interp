@@ -6,10 +6,10 @@ import scipy as sp
 
 def get_aff_unaff_columns(prompt_type):
     match prompt_type:
-        case "yes_or_no" | "no_or_yes" | "agreement" | "disagreement_negation":
-            return "yes_probs", "no_probs"
-        case "disagreement" | "agreement_negation" | "negation":
-            return "no_probs", "yes_probs"
+        case "yes_or_no" | "no_or_yes" | "agreement" | "disagreement_negation" | "negation":
+            return "Yes_probs", "No_probs"
+        case "disagreement" | "agreement_negation" :
+            return "No_probs", "Yes_probs"
         case "options":
             return "A_probs", "B_probs"
         case "options_flipped":
@@ -33,8 +33,11 @@ def exponentiate_fields(df, fields):
     return df
 
 def organize_distribution(model_results):
-    model_results = exponentiate_fields(model_results, ["yes_probs", "no_probs", "A_probs", "B_probs"])
-    model_results["Other_prob"] = 1 - model_results["yes_probs"] - model_results["no_probs"]
+    # Candidate probs fields are logprobs, so we exponentiate them
+    # NOTE: this is a copy of the candidates list in model.py - check for match
+    candidates = ['YES', 'Yes', 'yes', 'NO', 'No', 'no', 'A', 'B']
+    model_results = exponentiate_fields(model_results, [x + "_probs" for x in candidates])
+    model_results["Other_prob"] = 1 - model_results["Yes_probs"] - model_results["No_probs"]
 
     for group, indices in model_results.groupby("prompt_type").indices.items():
         aff_column, unaff_column = get_aff_unaff_columns(group)
@@ -105,7 +108,7 @@ def summarize_missing_probs(df):
     non_options_mask = (df["prompt_type"] != "options") & (df["prompt_type"] != "options_flipped")
     options_mask = (df["prompt_type"] == "options") | (df["prompt_type"] == "options_flipped")
     return pd.concat([
-        (df[["yes_probs", "no_probs"]][non_options_mask] == 0).astype(int).sum(axis=0),
+        (df[["Yes_probs", "No_probs"]][non_options_mask] == 0).astype(int).sum(axis=0),
         (df[["A_prob", "B_prob"]][options_mask] == 0).astype(int).sum(axis=0)
     ])
 
