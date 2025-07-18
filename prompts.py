@@ -9,6 +9,8 @@ from tqdm import tqdm
 
 def locus_premise(locus_of_uncertainty):
     locus_of_uncertainty = locus_of_uncertainty.strip()
+    if locus_of_uncertainty == 'causative "from"':
+        return f"Considering just how {locus_of_uncertainty} would be understood by ordinary speakers of English"
     return f"Considering just how \"{locus_of_uncertainty}\" would be understood by ordinary speakers of English"
 
 ## Coverage Prompt functions - posing the questions with the proxy of coverage
@@ -49,7 +51,7 @@ def agree_disagree_question_add_on(agreement: Literal["agree", "disagree"]):
 def coverage_agreement(contract):
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, {agree_disagree_question_add_on('agree')}: "{contract['person_name']} is covered by the insurance."\u2014{YES_NO_QUESTION}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {agree_disagree_question_add_on('agree')}: "{contract['person_name']} is covered by the insurance"\u2014{YES_NO_QUESTION}"""
 
 
 def coverage_agreement_on_negation(contract):
@@ -61,13 +63,13 @@ def coverage_agreement_on_negation(contract):
 def coverage_disagreement(contract):
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, {agree_disagree_question_add_on('disagree')}: "{contract['person_name']} is covered by the insurance."\u2014{YES_NO_QUESTION}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {agree_disagree_question_add_on('disagree')}: "{contract['person_name']} is covered by the insurance"\u2014{YES_NO_QUESTION}"""
 
 
 def coverage_disagreement_on_negation(contract):
     return f"""{contract['header']}
 {contract['continuation']}
-{locus_premise(contract['locus_of_uncertainty'])}, {agree_disagree_question_add_on('disagree')}: "{contract['person_name']} is not covered by the insurance." {YES_NO_QUESTION}"""
+{locus_premise(contract['locus_of_uncertainty'])}, {agree_disagree_question_add_on('disagree')}: "{contract['person_name']} is not covered by the insurance"\u2014{YES_NO_QUESTION}"""
 
 
 def coverage_options(contract):
