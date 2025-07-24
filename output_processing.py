@@ -24,7 +24,7 @@ def conditional_entropy(PX, PY):
     # all pairs x in X, y in
     joint_probs = np.outer(PX, PY)
     conditional_probs = np.divide(joint_probs, PX, where=PX!=0, out=np.zeros_like(joint_probs))
-    log_term = np.log(conditional_probs, where=conditional_probs!= 0, out=np.zeros_like(conditional_probs))
+    # log_term = np.log(conditional_probs, where=conditional_probs!= 0, out=np.zeros_like(conditional_probs))
     return -np.sum(np.where(joint_probs !=0, joint_probs * log_term, 0)) # scalar
 
 def exponentiate_fields(df, fields):
@@ -64,32 +64,35 @@ def calculate_relative_measures(model_results):
         "model_name": list(),
         "prompt_type": list(),
         "js_dist": list(),
-        "more_than_reversal": list(),
-        "cond_entropy": list()
+        "kl_div": list(),
+        # "more_than_reversal": list(),
+        # "cond_entropy": list()
     }
     # control and variation pairs
     for group, df in model_results.groupby(['title', 'version', 'model_name'], sort=False):
         control_mask = df.prompt_type == "yes_or_no"
-        control_probs = df[["Aff_prob", "UnAff_prob", "Other_prob"]][control_mask]
+        control_probs = df[["Covered_prob", "NotCovered_prob", "Other_prob"]][control_mask]
 
-        reversal_probs = df[["UnAff_prob", "Aff_prob", "Other_prob"]][control_mask]
-        reversal_dists = np.array([sp.spatial.distance.jensenshannon(x, y) for x, y in zip(control_probs.values, reversal_probs.values)])
+        # reversal_probs = df[["UnAff_prob", "Aff_prob", "Other_prob"]][control_mask]
+        # reversal_dists = np.array([sp.spatial.distance.jensenshannon(x, y) for x, y in zip(control_probs.values, reversal_probs.values)])
         for variation in prompt_types[1:]:
             relative_measures["title"].append(group[0])
             relative_measures["version"].append(group[1])
+            relative_measures["model_name"].append(group[2])
             relative_measures["prompt_type"].append(variation)
 
             variation_mask = df.prompt_type == variation
-            variation_probs = df[["Aff_prob", "UnAff_prob", "Other_prob"]][variation_mask]
-            # TODO numpy it
-            relative_measures["cond_entropy"].append(conditional_entropy(control_probs.values, variation_probs.values))
+            variation_probs = df[["Covered_prob", "NotCovered_prob", "Other_prob"]][variation_mask]
+            # # TODO numpy it
+            # relative_measures["cond_entropy"].append(conditional_entropy(control_probs.values, variation_probs.values))
 
             # Jensen-Shannon Distance
             js_dist = sp.spatial.distance.jensenshannon(control_probs.values, variation_probs.values, axis=1).mean()
             relative_measures["js_dist"].append(js_dist)
+            relative_measures["kl_div"].append(sp.stats.entropy(control_probs.values, variation_probs.values, axis=1).mean())
 
-            more_than_reversal = js_dist > reversal_dists
-            relative_measures["more_than_reversal"].append(more_than_reversal.mean())
+            # more_than_reversal = js_dist > reversal_dists
+            # relative_measures["more_than_reversal"].append(more_than_reversal.mean())
     df = pd.DataFrame.from_dict(relative_measures)
     return df
 
@@ -116,6 +119,7 @@ def summarize_missing_probs(df):
         (df[["A_prob", "B_prob"]][options_mask] == 0).astype(int).sum(axis=0)
     ])
 
+# Modifies DF due to inplace `organize_distribution` call
 def analyze_model_divergences(df):
     model_results = organize_distribution(df)
     divergences = calculate_relative_measures(model_results)
