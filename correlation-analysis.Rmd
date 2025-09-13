@@ -1,0 +1,338 @@
+---
+title: "prejud-prompt"
+output: pdf_document
+date: "2025-07-09"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+library(dplyr)
+library(ggplot2)
+library(purrr)
+library(broom)
+library(ggrepel)
+
+base_data_path <- "H:\\Documents\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\Ministral-8B-Instruct-2410-results.csv"
+base_data <- read.csv(base_data_path)
+instruct_data_path <- "H:\\Documents\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\Ministral-8B-Instruct-2410-results.csv"
+instruct_data <- read.csv(instruct_data_path)
+human_judgement_path <- "H:\\Documents\\Github\\vague_contracts\\data\\1_falseconsensus\\main-merged.csv"
+human_data <- read.csv(human_judgement_path)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+
+human_judgment_by_group <- human_data %>%
+  group_by(title, version) %>%
+  summarise(
+    total = n(),
+    yes_count = sum(individual_judgment == "yes", na.rm = TRUE),
+    no_count = sum(individual_judgment == "no", na.rm = TRUE),
+    percent_yes = yes_count / (yes_count + no_count)
+  ) %>%
+  ungroup()
+```
+
+```{r pressure, echo=FALSE}
+process_llm_data <- function(llm_data) {
+# Process llm_data to compute the desired probability differences
+  llm_data_processed <- llm_data %>%
+    mutate(
+      # Convert log probs to linear scale
+      p_yes = exp(Yes_probs) + exp(YES_probs) + exp(yes_probs),
+      p_no  = exp(No_probs) + exp(NO_probs) + exp(no_probs),
+      p_a   = exp(A_probs),
+      p_b   = exp(B_probs),
+      
+      # Compute probability difference based on prompt_type
+      prob_diff = case_when(
+        prompt_type %in% c(
+                           # "Yes/No", "No/Yes",
+                           # "Agreement", "DisagrWithNeg",
+                           # "Negation") ~ p_yes - p_no,
+                           "yes_or_no", "no_or_yes",
+                           "agreement", "disagreement_negation",
+                           "negation") ~ p_yes - p_no,
+        # prompt_type %in% c("AgrWithNeg", "Disagreement") ~ p_no - p_yes,
+        # prompt_type == "Options" ~ p_a - p_b,
+        # prompt_type == "OptionsFlipped" ~ p_b - p_a,
+        prompt_type %in% c("agreement_negation", "disagreement") ~ p_no - p_yes,
+        prompt_type == "options" ~ p_a - p_b,
+        prompt_type == "options_flipped" ~ p_b - p_a,
+        TRUE ~ NA_real_  # Fallback for any unexpected prompt_type
+      )
+    )
+  return(llm_data_processed)
+}
+
+processed_base_data <- process_llm_data(base_data)
+processed_inst_data <- process_llm_data(instruct_data)
+
+
+```
+
+
+```{r}
+# Step 1: Merge human judgment with LLM data
+base_merged <- processed_base_data %>%
+  left_join(human_judgment_by_group, by = c("title", "version")) %>%
+  mutate(source = "base")
+
+inst_merged <- processed_inst_data %>%
+  left_join(human_judgment_by_group, by = c("title", "version")) %>%
+  mutate(source = "inst")
+
+# Step 2: Combine both for plotting
+combined_data <- bind_rows(base_merged, inst_merged)
+
+# Step 3: Prepare annotation data for plotting
+
+
+# regression_stats <- inst_merged %>%
+# group_by(prompt_type) %>%
+# summarise(
+#   model = list(lm(percent_yes ~ prob_diff)),
+#   .groups = "drop"
+# ) %>%
+# mutate(
+#   stats = map(model, glance),
+#   slope = map_dbl(model, ~ coef(.x)[["prob_diff"]]),
+#   r2 = map_dbl(stats, ~ .x$r.squared)
+# )
+
+
+regression_stats <- inst_merged %>%
+  group_by(prompt_type) %>%
+  summarise(
+    model = list(lm(percent_yes ~ prob_diff)),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    tidy_model = map(model, tidy),   # coefficient-level info
+    glance_model = map(model, glance), # model-level info
+    slope = map_dbl(model, ~ coef(.x)[["prob_diff"]]),
+    r2 = map_dbl(glance_model, ~ .x$r.squared),
+    slope_pval = map_dbl(tidy_model, ~ .x$p.value[.x$term == "prob_diff"]) # p-value for slope
+  )
+
+# Step 4: Prepare annotation data for plotting
+
+# regression_labels <- regression_stats %>%
+#   transmute(
+#     prompt_type,
+#     label = sprintf("R² = %.3f", r2),
+#     x = -0.4,
+#     y = 0.5
+#   )
+
+regression_labels <- regression_stats %>%
+  transmute(
+    prompt_type,
+    label = sprintf("R² = %.3f, p = %.3g", r2, slope_pval),
+    x = -0.4,
+    y = 0.5   # adjust depending on your y-scale
+  )
+
+# Step 5: Create scatter plots by prompt_type
+plot <- ggplot(combined_data, aes(x = prob_diff, y = percent_yes, color = source, shape = source)) +
+  geom_point(alpha = 0.6, size = 2.5) +
+  # Regression line for inst_data only
+  geom_smooth(
+    data = filter(combined_data, source == "inst"),
+    method = "lm",
+    se = FALSE,
+    color = "black",
+    linetype = "dashed"
+  ) +
+  geom_text(
+    data = regression_labels,
+    aes(x = x, y = y, label = label),
+    inherit.aes = FALSE,
+    hjust = 0,
+    size = 3.5
+  ) +
+  facet_wrap(~ prompt_type, scales = "free") +
+  labs(
+    x = "p(covered)",
+    y = "Human Judgement (%covered)",
+    color = "Llama-8B",
+    shape = "Llama-8B",
+    title = "Human and LLM judgment by Question Variation"
+  ) +
+  theme_minimal()
+
+plot
+
+# ggsave("llama-human.pdf", plot = plot, width = 7, height = 4, units = "in")
+
+```
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+best_prompt<-"options"
+highest_r2_data <- filter(inst_merged, prompt_type==best_prompt)
+model <- filter(regression_stats, prompt_type==best_prompt)["model"][[1]][[1]]
+print(model)
+# threshold <- predict(model, data.frame(percent_yes=c(0.5)))
+threshold <- solve(model$coefficients[2], 0.5-model$coefficients[1])
+check <- predict(model, data.frame(prob_diff=c(threshold)))
+print(c(threshold, check))
+highest_r2_data$hum_judg <- with(highest_r2_data, ifelse(percent_yes > 0.5, TRUE, FALSE))
+highest_r2_data$hum_judg_strict <- with(highest_r2_data, ifelse(percent_yes > 0.7, TRUE, FALSE))
+highest_r2_data$lin_thr_judg <- with(highest_r2_data, ifelse(prob_diff > threshold, TRUE, FALSE))
+highest_r2_data$lin_thr_acc <- with(highest_r2_data, ifelse(lin_thr_judg == hum_judg, TRUE, FALSE))
+lin_the_acc = sum(highest_r2_data$lin_thr_acc) / nrow(highest_r2_data)
+cat("Linear threshold accuracy:", lin_the_acc)
+
+highest_r2_data_strict <- filter(highest_r2_data, version!="controversial" & hum_judg_strict==TRUE)
+
+lin_the_acc = sum(highest_r2_data_strict$lin_thr_acc) / nrow(highest_r2_data_strict)
+cat("; Strict threshold accuracy:", lin_the_acc)
+
+```
+
+
+```{r}
+# Add a binary column: TRUE if prob_diff > 0, FALSE otherwise
+get_response_direction <- function(df, source_name) {
+  df %>%
+    mutate(
+      source = source_name,
+      prob_positive = prob_diff > 0
+    )
+}
+
+base_labeled <- get_response_direction(processed_base_data, "base")
+inst_labeled <- get_response_direction(processed_inst_data, "inst")
+
+combined_labeled <- bind_rows(base_labeled, inst_labeled)
+
+# Summarize proportion of positive responses
+response_summary <- combined_labeled %>%
+  group_by(prompt_type, source) %>%
+  summarise(
+    proportion_positive = mean(prob_positive, na.rm = TRUE),
+    count = n(),
+    .groups = "drop"
+  )
+
+# Bar plot
+llama_pos <- ggplot(response_summary, aes(y = prompt_type, x = proportion_positive, fill = source)) +
+  geom_col(position = position_dodge(width = 0.7), width = 0.6) +
+  geom_text(
+    aes(label = scales::percent(proportion_positive, accuracy = 1)),
+    position = position_dodge(width = 0.7),
+    hjust = -0.1,
+    size = 3
+  ) +
+  geom_vline(xintercept=0.58, linetype="dashed", color="pink") +
+  scale_x_continuous(labels = scales::percent_format(), limits = c(0, 1.1)) +
+  labs(
+    title = "% LLM judgments p(Covered) > p(NotCovered)",
+    x = "Proportion",
+    y = "Question variations",
+    fill = "Llama-8B"
+  ) +
+  theme_minimal(base_size=15)
+
+llama_pos
+
+# ggsave("llama-positive.pdf", plot = llama_pos, width = 7, height = 4, units = "in")
+
+```
+
+```{r}
+ggplot(combined_labeled, aes(y = prompt_type, x = prob_diff, fill = source)) +
+  geom_violin(alpha = 0.5, position = position_dodge(width = 0.8)) +
+  geom_boxplot(width = 0.1, position = position_dodge(width = 0.8)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray30") +
+  labs(
+    title = "Distribution of Llama 8B prob_diff by Prompt Type",
+    x = "prob_diff (linear scale)",
+    y = "Prompt Type",
+    fill = "LLM Source"
+  ) +
+  theme_minimal()
+
+
+
+```
+```{r}
+library(tidyverse)
+
+# ---- Step 1: Load and label data ----
+# Suppose you already read multiple files into a list
+# Here's an example with placeholder code:
+file_list <- list.files(path = "H:\\Github\\llms-legal-interp\\runs\\runs-42_07_16", pattern = "*.csv", full.names = TRUE)
+
+model_data <- map_df(file_list, ~ {
+  df <- read_csv(.x)
+  df$model_name <- tools::file_path_sans_ext(basename(.x))  # strip ".csv"
+  df
+})
+
+model_data <- process_llm_data(model_data)
+model_data <- filter(model_data, prompt_type=="yes_or_no")
+
+# ---- Step 2: Compute p_other ----
+model_data <- model_data %>%
+  mutate(p_other = 1 - (p_yes + p_no))
+model_data$model_name <- str_remove(model_data$model_name, "-results")
+```
+
+```{r}
+
+# ---- Step 3: Pivot to long format ----
+df_long <- model_data %>%
+  pivot_longer(cols = c(p_yes, p_no, p_other),
+               names_to = "judgment", values_to = "probability") %>%
+  mutate(judgment = recode(judgment,
+                           p_yes = "Covered",
+                           p_no = "NotCovered",
+                           p_other = "Other"))
+
+```
+
+```{r}
+# ---- Step 4: Compute token ratio ----
+token_counts <- model_data %>%
+  group_by(model_name) %>%
+  summarise(yes = sum(p_yes > p_no),  # adjust threshold if needed
+            no = sum(p_no > p_yes),
+            label = paste0(yes, ":", no))  # format for right-side label
+```
+
+```{r}
+# ---- Step 5: Plot ----
+ggplot(df_long, aes(x = probability, y = model_name, color = judgment)) +
+  geom_jitter(height = 0.25, size = 1.5, alpha = 0.7) +
+  geom_text(data = token_counts, aes(x = 0.9, y = model_name, label = label),
+            inherit.aes = FALSE, size = 3.5, hjust = 0) +
+  scale_color_manual(values = c("Covered" = "lightblue",
+                                "NotCovered" = "orange",
+                                "Other" = "lightgreen")) +
+  xlim(0, 1) +
+  theme_minimal() +
+  labs(x = "Judgement Probability", y = "LLM", color = "value") +
+  theme(panel.grid.major.x = element_blank(),
+        axis.text.y = element_text(size = 10, hjust = 0),
+        legend.position = "bottom")
+
+
+
+```
+
+
