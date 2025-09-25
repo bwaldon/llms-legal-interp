@@ -3,6 +3,9 @@ from collections import OrderedDict
 import numpy as np
 from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams, CompletionOutput
+import torch
+
+NUM_GPUS = torch.cuda.device_count()
 
 class MetaLinguisticJudgement:
     def __init__(self, model_name, seed, max_model_len=216):
@@ -32,6 +35,13 @@ class MetaLinguisticJudgement:
         else:
             gpu_memory_utilization = 0.85
         self.max_model_len = max_model_len
+        if NUM_GPUS >= 4:
+            tp_size = 4
+        elif num_gpus >= 2:
+            tp_size = 2
+        else:
+            tp_size = 1
+
         self.llm = LLM(
             model_name,
             max_model_len=max_model_len,
@@ -39,6 +49,7 @@ class MetaLinguisticJudgement:
             dtype="float16",
             gpu_memory_utilization=gpu_memory_utilization,
             max_num_seqs=8,
+            tensor_parallel_size = tp_size
         )
 
     def infer(self, prompts: List[str]) -> List[CompletionOutput]:
