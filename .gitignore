@@ -182,6 +182,7 @@ cython_debug/
 # website: http://jupyter.org/
 
 .ipynb_checkpoints
+*.analyis.jupyterlab-workspace
 */.ipynb_checkpoints/*
 
 # IPython
