@@ -1,7 +1,8 @@
 # Analysis Notes
 
 1. Categorical counts and Distributional Spread
-`yes_or_no_table.tex` from `StoppedClock` notebook
+
+~`yes_or_no_table.tex` from ~~`StoppedClock`~~ `analysis-robustness.ipynb` notebook
 
 2. Majority Vote distribution
 `majority-votes-freq-table.tex` from `Robustness` notebook
