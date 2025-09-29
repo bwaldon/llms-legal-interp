@@ -36,11 +36,13 @@ def set_random_seed(seed):
 model_list = [
     # Main set of models with instruct divide and size variety
     "meta-llama/Llama-3.2-1B",
-    "meta-llama/Llama-3.2-1B-Instruct",
+    "models/meta-llama/Llama-3.2-1B-Instruct",
     "meta-llama/Llama-3.2-3B",
     "meta-llama/Llama-3.2-3B-Instruct",
     "meta-llama/Llama-3.1-8B",
     "meta-llama/Llama-3.1-8B-Instruct",
+    # pre-downloaded large model
+    "/scratch/jm3743/meta-llama/Llama-3.3-70B-Instruct",
     # Small reference model - would allow for pretraining variation
     "gpt2-medium",
     # Other open models
@@ -119,7 +121,7 @@ def main(seed):
         # TODO parameterize with seed
         print(f"For {model_name} results :{results}")
 
-        results.to_csv(f"runs-{seed}/{model_name}-results.csv", index=False)
+        results.to_csv(f"runs-{seed}/{model_name.split('/')[-1]}-results.csv", index=False)
         del results
         del results_dict
         torch.cuda.empty_cache()
