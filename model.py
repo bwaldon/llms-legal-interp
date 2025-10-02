@@ -3,6 +3,7 @@ from collections import OrderedDict
 import numpy as np
 from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams, CompletionOutput
+import torch
 
 class MetaLinguisticJudgement:
     def __init__(self, model_name, seed, max_model_len=216):
@@ -20,7 +21,7 @@ class MetaLinguisticJudgement:
             logprobs=1,
             prompt_logprobs=True
         )
-        # TODO add reference for these hyperparameters or notes
+
         if 'gpt' in model_name:
             max_model_len = 256
         elif 'bloom' in model_name:
@@ -30,15 +31,29 @@ class MetaLinguisticJudgement:
         if 'bloom' in model_name:
             gpu_memory_utilization = 0.3
         else:
-            gpu_memory_utilization = 0.85
+            gpu_memory_utilization = 0.92
         self.max_model_len = max_model_len
+
+        if "70B" in self.model_name:
+            tensor_parallel_size = 4
+        else:
+            tensor_parallel_size = 1
+
+        num_gpus = torch.cuda.device_count()
+        if num_gpus < tensor_parallel_size:
+            raise RuntimeError(
+                    f"Requested tensor_parallel_size={tp_size}, "
+                            f"but only {num_gpus} GPU(s) are available."
+                                )
         self.llm = LLM(
             model_name,
             max_model_len=max_model_len,
             seed=seed,
             dtype="float16",
             gpu_memory_utilization=gpu_memory_utilization,
-            max_num_seqs=8,
+            max_num_seqs=1,
+            tensor_parallel_size=tensor_parallel_size,
+            disable_custom_all_reduce=True
         )
 
     def infer(self, prompts: List[str]) -> List[CompletionOutput]:
