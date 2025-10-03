@@ -19,6 +19,8 @@ import numpy as np
 from datasets import Dataset
 from openai import OpenAI
 
+from tqdm import tqdm
+
 from prompts import get_dataset_for_coverage_questions
 
 
@@ -53,7 +55,7 @@ def infer_and_extract_output(client, prompt_list):
             top_logprobs=20,
         )
 
-    responses = [response(prompt) for prompt in prompt_list]
+    responses = [response(prompt) for prompt in tqdm(prompt_list, desc="Inferring prompts")]
     def output_from_response(response):
         content = response.output[0].content[0],
         # print(type(content[0]))
