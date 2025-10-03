@@ -56,13 +56,14 @@ def infer_and_extract_output(client, prompt_list):
     responses = [response(prompt) for prompt in prompt_list]
     def output_from_response(response):
         content = response.output[0].content[0],
-        print(type(content[0]))
-        print(content[0])
+        # print(type(content[0]))
+        # print(content[0])
         return {
             "text": content[0].text,
             "logprobs" : OrderedDict((lp.token, lp.logprob) for lp in content[0].logprobs[0].top_logprobs)
         }
     outputs = [output_from_response(response) for response in responses]
+    # print(responses)
     return outputs
 
 if __name__ == "__main__":
@@ -81,8 +82,8 @@ if __name__ == "__main__":
     openai_api_key = os.environ.get("OPENAI_API_KEY")
     client = OpenAI(api_key=openai_api_key)
     outputs = infer_and_extract_output(client, prompts_list)
-
-    if len(outputs) != len(prompts_dataset):
+    # print(json.dumps(outputs, indent=2))
+    if len(outputs) != len(prompts_list):
         print(f"!!!! Length mismatch: {len(outputs)} outputs vs {len(prompts_dataset)} dataset")
 
 
@@ -98,7 +99,7 @@ if __name__ == "__main__":
             "prompt_type": dataset["prompt_type"],
             "prompt": dataset["prompt"],
             "version": dataset["version"],
-            "output": [output["logprobs"].popitem(last=False)[0] for output in outputs],
+            "output": [next(iter(output["logprobs"])) for output in outputs],
             "output_text": [output["text"] for output in outputs],
             # "cum_logprob": [output.cumulative_logprob for output in outputs],
         }
