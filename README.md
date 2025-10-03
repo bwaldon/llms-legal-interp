@@ -17,11 +17,19 @@ The `colab_vllm.ipynb` notebook accompanies the below article:
 
 ## Not Ready for the Bench: LLM Legal Interpretation Is Unstable And Uncalibrated to Human Judgments
 
-`main.py` is the main script for the experiments, it uses vLLM and huggingface transformers to collect model judgments.
+Our code should represent an inference and analysis pipeline for the experiments
+`main.py` is the main script for the inference, it uses vLLM and huggingface transformers to collect model judgments.
 * `models.py` contains the code for inference and judgment extraction.
 * `prompts.py` contains code from generating the prompts for each of the question variants from the source data.
 * `analysis.ipynb` contains the analysis codee for robustness (Section 4.2)
 * `correlation-analysis.Rmd` contains the R code for the human correlation analysis (Section 4.3)
+
+
+`runs/runs-42_07_16` contains the model outputs for each of the models with labels for the variants.
+
+*Warning* : 
+A confusing naming convention we have is that we use `_probs` but they actually have logprobs and are exponentiated in the analysis code.
+Soon in the future we will change this to `_logprobs` to avoid confusion.
 
 ### Replication 
 
