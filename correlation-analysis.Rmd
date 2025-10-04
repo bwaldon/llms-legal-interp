@@ -21,11 +21,11 @@ library(purrr)
 library(broom)
 library(ggrepel)
 
-base_data_path <- "H:\\Documents\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\Ministral-8B-Instruct-2410-results.csv"
+base_data_path <- "D:\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\meta-llama\\Llama-3.3-70B-Instruct-results.csv"
 base_data <- read.csv(base_data_path)
-instruct_data_path <- "H:\\Documents\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\Ministral-8B-Instruct-2410-results.csv"
+instruct_data_path <- "D:\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\openai-gpt-4-results.csv"
 instruct_data <- read.csv(instruct_data_path)
-human_judgement_path <- "H:\\Documents\\Github\\vague_contracts\\data\\1_falseconsensus\\main-merged.csv"
+human_judgement_path <- "D:\\Github\\vague_contracts\\data\\1_falseconsensus\\main-merged.csv"
 human_data <- read.csv(human_judgement_path)
 ```
 
@@ -89,11 +89,11 @@ processed_inst_data <- process_llm_data(instruct_data)
 # Step 1: Merge human judgment with LLM data
 base_merged <- processed_base_data %>%
   left_join(human_judgment_by_group, by = c("title", "version")) %>%
-  mutate(source = "base")
+  mutate(source = "70B-Inst")
 
 inst_merged <- processed_inst_data %>%
   left_join(human_judgment_by_group, by = c("title", "version")) %>%
-  mutate(source = "inst")
+  mutate(source = "GPT-4")
 
 # Step 2: Combine both for plotting
 combined_data <- bind_rows(base_merged, inst_merged)
@@ -151,7 +151,7 @@ plot <- ggplot(combined_data, aes(x = prob_diff, y = percent_yes, color = source
   geom_point(alpha = 0.6, size = 2.5) +
   # Regression line for inst_data only
   geom_smooth(
-    data = filter(combined_data, source == "inst"),
+    data = filter(combined_data, source == "GPT-4"),
     method = "lm",
     se = FALSE,
     color = "black",
@@ -162,14 +162,14 @@ plot <- ggplot(combined_data, aes(x = prob_diff, y = percent_yes, color = source
     aes(x = x, y = y, label = label),
     inherit.aes = FALSE,
     hjust = 0,
-    size = 3.5
+    size = 3
   ) +
   facet_wrap(~ prompt_type, scales = "free") +
   labs(
     x = "p(covered)",
     y = "Human Judgement (%covered)",
-    color = "Llama-8B",
-    shape = "Llama-8B",
+    color = "LLM",
+    shape = "LLM",
     title = "Human and LLM judgment by Question Variation"
   ) +
   theme_minimal()
@@ -182,7 +182,7 @@ plot
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
 ```{r}
-best_prompt<-"options"
+best_prompt<-"yes_or_no"
 highest_r2_data <- filter(inst_merged, prompt_type==best_prompt)
 model <- filter(regression_stats, prompt_type==best_prompt)["model"][[1]][[1]]
 print(model)
@@ -215,8 +215,8 @@ get_response_direction <- function(df, source_name) {
     )
 }
 
-base_labeled <- get_response_direction(processed_base_data, "base")
-inst_labeled <- get_response_direction(processed_inst_data, "inst")
+base_labeled <- get_response_direction(processed_base_data, "70B-Inst")
+inst_labeled <- get_response_direction(processed_inst_data, "GPT-4")
 
 combined_labeled <- bind_rows(base_labeled, inst_labeled)
 
@@ -244,7 +244,7 @@ llama_pos <- ggplot(response_summary, aes(y = prompt_type, x = proportion_positi
     title = "% LLM judgments p(Covered) > p(NotCovered)",
     x = "Proportion",
     y = "Question variations",
-    fill = "Llama-8B"
+    fill = "LLM"
   ) +
   theme_minimal(base_size=15)
 
