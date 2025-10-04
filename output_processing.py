@@ -1,6 +1,6 @@
 import pandas as pd
 
-from prompts import prompt_types
+from prompts import prompt_types, candidates
 import numpy as np
 import scipy as sp
 
@@ -35,11 +35,10 @@ def exponentiate_fields(df, fields):
 def organize_distribution(model_results):
     # Candidate probs fields are logprobs, so we exponentiate them
     # NOTE: this is a copy of the candidates list in model.py - check for match
-    candidates = ['Yes', 'yes','No', 'no', 'A', 'B']
     model_results = exponentiate_fields(model_results, [x + "_probs" for x in candidates])
     # Summate yes and no candidate probs
-    model_results["Yes_probs"] = model_results["Yes_probs"] + model_results["yes_probs"]
-    model_results["No_probs"] = model_results["No_probs"] + model_results["no_probs"]
+    model_results["Yes_probs"] = model_results["Yes_probs"] + model_results["yes_probs"] + model_results["YES_probs"]
+    model_results["No_probs"] = model_results["No_probs"] + model_results["no_probs"] + model_results["NO_probs"]
 
     model_results["Other_prob"] = 1 - model_results["Yes_probs"] - model_results["No_probs"]
 
@@ -49,7 +48,7 @@ def organize_distribution(model_results):
         model_results.loc[indices, "UnAff_prob"] = model_results[unaff_column][indices]
         def normalize(x, y):
             return x/(x+y), y/(x+y)
-        model_results["Covered_prob"], model_results["NotCovered_prob"] = model_results["Aff_prob"], model_results["UnAff_prob"]
+q        model_results["Covered_prob"], model_results["NotCovered_prob"] = model_results["Aff_prob"], model_results["UnAff_prob"]
         model_results["Covered"] = model_results["Aff_prob"] > model_results["UnAff_prob"]
         model_results["NotCovered"] = model_results["Aff_prob"] <= model_results["UnAff_prob"]
 

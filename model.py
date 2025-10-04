@@ -5,6 +5,8 @@ from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams, CompletionOutput
 import torch
 
+from prompts import candidates
+
 class MetaLinguisticJudgement:
     def __init__(self, model_name, seed, max_model_len=216):
         self.model_name = model_name
@@ -66,12 +68,13 @@ class MetaLinguisticJudgement:
 
         SPACE= " "
         # We use lowercase yes and no in the prompts now.
-        candidates = ['YES', 'Yes', 'yes', 'NO', 'No', 'no', 'A', 'B']
+        # candidates = ['YES', 'Yes', 'yes', 'NO', 'No', 'no', 'A', 'B']
 
         prompts_with_token = [p + SPACE + answer for p in prompts for answer in candidates]
         outputs = self.llm.generate(prompts_with_token, self.logprob_params)
         # TODO implement sequence probability the same way
         tokenizer = self.llm.get_tokenizer()
+        #TODO: could be min float
         MIN_INT = np.iinfo(int).min
         candidate_tokens = OrderedDict()
         for candidate in candidates:
