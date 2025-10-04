@@ -7,6 +7,8 @@ from collections import OrderedDict
 from pprint import pprint
 from tqdm import tqdm
 
+candidates = ['Yes', 'yes', 'YES', 'No', 'no', 'NO', 'A', 'B']
+
 def locus_premise(locus_of_uncertainty):
     locus_of_uncertainty = locus_of_uncertainty.strip()
     if locus_of_uncertainty == 'causative "from"':

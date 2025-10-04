@@ -21,26 +21,26 @@ from openai import OpenAI
 
 from tqdm import tqdm
 
-from prompts import get_dataset_for_coverage_questions
+from prompts import get_dataset_for_coverage_questions, candidates
 
 
 # def infer_from_openai(prompts, model="gpt-4", max_tokens=100, temperature=0.0):
 #     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 #     # Completions using the 'legacy' completions endpoint
 
-def request_batch(prompts, batch_name, model="gpt-4-0613", max_tokens=1, temperature=0.0):
-    def completion_request_for_prompt(prompt, prompt_id):
-        return { "custom_id": prompt_id, "method": "POST", "url": "/v1/chat/completions",
-                    "body": {
-                        "model": model, # gpt-4o-2024-11-20
-                        "prompt": prompt,
-                        "max_tokens": 1,
-                        "temperature": 0,
-                    }
-        }
-
-    requests_batch = [completion_request_for_prompt(prompt, batch_name + "-" + str(idx)) for idx, prompt in enumerate(prompts)]
-    return requests_batch
+# def request_batch(prompts, batch_name, model="gpt-4-0613", max_tokens=1, temperature=0.0):
+#     def completion_request_for_prompt(prompt, prompt_id):
+#         return { "custom_id": prompt_id, "method": "POST", "url": "/v1/chat/completions",
+#                     "body": {
+#                         "model": model, # gpt-4o-2024-11-20
+#                         "prompt": prompt,
+#                         "max_tokens": 1,
+#                         "temperature": 0.0,
+#                     }
+#         }
+#
+#     requests_batch = [completion_request_for_prompt(prompt, batch_name + "-" + str(idx)) for idx, prompt in enumerate(prompts)]
+#     return requests_batch
 
 def infer_and_extract_output(client, prompt_list):
     def response(prompt):
@@ -56,6 +56,7 @@ def infer_and_extract_output(client, prompt_list):
         )
 
     responses = [response(prompt) for prompt in tqdm(prompt_list, desc="Inferring prompts")]
+    # print(responses)
     def output_from_response(response):
         content = response.output[0].content[0],
         # print(type(content[0]))
@@ -65,7 +66,6 @@ def infer_and_extract_output(client, prompt_list):
             "logprobs" : OrderedDict((lp.token, lp.logprob) for lp in content[0].logprobs[0].top_logprobs)
         }
     outputs = [output_from_response(response) for response in responses]
-    # print(responses)
     return outputs
 
 if __name__ == "__main__":
@@ -75,6 +75,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     if args.test:
+        # prompts that have some 0 values
+        # samples = [36, 117, 753, 969, 971, 972, 974, 975, 977, 978]
         prompts_dataset = get_dataset_for_coverage_questions()[:9]
     else:
         prompts_dataset = get_dataset_for_coverage_questions()
@@ -84,7 +86,7 @@ if __name__ == "__main__":
     openai_api_key = os.environ.get("OPENAI_API_KEY")
     client = OpenAI(api_key=openai_api_key)
     outputs = infer_and_extract_output(client, prompts_list)
-    # print(json.dumps(outputs, indent=2))
+
     if len(outputs) != len(prompts_list):
         print(f"!!!! Length mismatch: {len(outputs)} outputs vs {len(prompts_dataset)} dataset")
 
@@ -92,7 +94,7 @@ if __name__ == "__main__":
     def collate_outputs(dataset, outputs):
         # TODO abhip: unify candidate variables with model.py
         # Candidates copied from model.py
-        candidates = ['YES', 'Yes', 'yes', 'NO', 'No', 'no', 'A', 'B']
+        # candidates = ['YES', 'Yes', 'yes', 'NO', 'No', 'no', 'A', 'B']
         MIN_FLOAT = np.finfo(float).min
 
 
@@ -101,7 +103,7 @@ if __name__ == "__main__":
             "prompt_type": dataset["prompt_type"],
             "prompt": dataset["prompt"],
             "version": dataset["version"],
-            "output": [next(iter(output["logprobs"])) for output in outputs],
+            "output": [list(output["logprobs"])[0] for output in outputs],
             "output_text": [output["text"] for output in outputs],
             # "cum_logprob": [output.cumulative_logprob for output in outputs],
         }
