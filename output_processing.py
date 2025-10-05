@@ -40,18 +40,17 @@ def organize_distribution(model_results):
     model_results["Yes_probs"] = model_results["Yes_probs"] + model_results["yes_probs"] + model_results["YES_probs"]
     model_results["No_probs"] = model_results["No_probs"] + model_results["no_probs"] + model_results["NO_probs"]
 
-    model_results["Other_prob"] = 1 - model_results["Yes_probs"] - model_results["No_probs"]
 
     for group, indices in model_results.groupby("prompt_type").indices.items():
         aff_column, unaff_column = get_aff_unaff_columns(group)
         model_results.loc[indices, "Aff_prob"] = model_results[aff_column][indices]
         model_results.loc[indices, "UnAff_prob"] = model_results[unaff_column][indices]
-        def normalize(x, y):
-            return x/(x+y), y/(x+y)
-q        model_results["Covered_prob"], model_results["NotCovered_prob"] = model_results["Aff_prob"], model_results["UnAff_prob"]
+
+        model_results["Covered_prob"], model_results["NotCovered_prob"] = model_results["Aff_prob"], model_results["UnAff_prob"]
         model_results["Covered"] = model_results["Aff_prob"] > model_results["UnAff_prob"]
         model_results["NotCovered"] = model_results["Aff_prob"] <= model_results["UnAff_prob"]
 
+    model_results["Other_prob"] = 1 - model_results["Covered_prob"] - model_results["NotCovered_prob"]
     model_results["entropy"] = model_results[["Aff_prob", "UnAff_prob", "Other_prob"]].apply(lambda x: sp.stats.entropy(x), axis=1)
 
     return model_results
