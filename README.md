@@ -15,10 +15,10 @@ The `colab_vllm.ipynb` notebook accompanies the below article:
 
 
 
-## Not Ready for the Bench: LLM Legal Interpretation Is Unstable And Uncalibrated to Human Judgments
+## Prompting from the bench: Large-scale pretraining is not sufficient to prepare LLMs for ordinary meaning analysis
 
 Most of the files in the repository correspond to the experiments from the following article:
-> Purushothama, A., Min, J., Waldon, B., & Schneider, N. (2025). Not ready for the bench: LLM legal interpretation is unstable and out of step with human judgments (No. arXiv:2510.25356). arXiv. https://doi.org/10.48550/arXiv.2510.25356
+> Abhishek Purushothama, Junghyun Min, Brandon Waldon, and Nathan Schneider. 2026. Prompting from the bench: Large-scale pretraining is not sufficient to prepare LLMs for ordinary meaning analysis. In FAccT ’26: The 2026 ACM Conference on Fairness, Accountability, and Transparency. 
 
 
 Our code represents inference and analysis pipeline for the experiments
