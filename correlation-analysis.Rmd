@@ -159,7 +159,7 @@ get_double_plot <- function(processed_base_data, processed_inst_data) {
 ```
 
 ```{r}
-# Pipeline to generate Figure 3, can be modified to generate Figure 5
+# Pipeline to generate Figure 3
 
 base_data_path <- "H:\\Documents\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\meta-llama\\Llama-3.1-70B-results.csv"
 base_data <- read.csv(base_data_path)
@@ -182,6 +182,113 @@ plot
 
 ggsave("llama-human.pdf", plot, width = 6, height = 4, dpi = 300)
 ```
+
+```{r}
+get_single_plot <- function(processed_inst_data) {
+
+  inst_merged <- processed_inst_data %>%
+    left_join(human_judgment_by_group, by = c("title", "version")) %>%
+    mutate(source = "Instruct")
+  
+  regression_stats <- inst_merged %>%
+    group_by(prompt_type) %>%
+    summarise(
+      model = list(lm(percent_yes ~ prob_diff)),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      tidy_model = map(model, tidy),   # coefficient-level info
+      glance_model = map(model, glance), # model-level info
+      slope = map_dbl(model, ~ coef(.x)[["prob_diff"]]),
+      r2 = map_dbl(glance_model, ~ .x$r.squared),
+      slope_pval = map_dbl(tidy_model, ~ .x$p.value[.x$term == "prob_diff"]) # p-value for slope
+    )
+
+  regression_label1 <- regression_stats %>%
+    transmute(
+      prompt_type,
+      label = sprintf("R² = %.3f", r2),
+      x = -0.4,
+      y = 0.5   # adjust depending on your y-scale
+    )
+  
+  regression_label2 <- regression_stats %>%
+    transmute(
+      prompt_type,
+      label = sprintf("p = %.3g", slope_pval),
+      x = -0.42,
+      y = 0.35   # adjust depending on y-scale
+    )
+  
+  plot <- ggplot(inst_merged, aes(x = prob_diff, y = percent_yes, color = source, shape = source)) +
+    geom_point(alpha = 0.6, size = 2.5) +
+    # Regression line for inst_data only
+    geom_smooth(
+      data = filter(inst_merged, source == "Instruct"),
+      method = "lm",
+      se = FALSE,
+      color = "black",
+      linetype = "dashed"
+    ) +
+    geom_text(
+      data = regression_label1,
+      aes(x = x, y = y, label = label),
+      inherit.aes = FALSE,
+      hjust = 0,
+      size = 3
+    ) +
+    geom_text(
+      data = regression_label2,
+      aes(x = x, y = y, label = label),
+      inherit.aes = FALSE,
+      hjust = 0,
+      size = 3
+    ) +
+    facet_wrap(~ prompt_type, scales = "free") +
+    labs(
+      x = "p(covered) - p(uncovered)",
+      y = "Human Judgement (%covered)",
+      color = "GPT-4",
+      shape = "GPT-4",
+      title = "Human and LLM judgment by Question Variation"
+    ) +
+    theme_minimal()
+  
+  best_r2_row <- regression_stats %>% slice_max(r2, n = 1)
+  
+  return (list(
+    plot=plot, 
+    best_prmopt_type=best_r2_row$prompt_type,
+    inst_merged=inst_merged)
+    )
+}
+```
+
+```{r}
+# Pipeline to generate Figure 3 modified to generate Figure 5
+
+# base_data_path <- "H:\\Documents\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\meta-llama\\Llama-3.1-70B-results.csv"
+# base_data <- read.csv(base_data_path)
+instruct_data_path <- "runs\\runs-42_07_16\\openai-gpt-4-results.csv"
+instruct_data <- read.csv(instruct_data_path)
+human_judgement_path <- "H:\\Documents\\Github\\vague_contracts\\data\\1_falseconsensus\\main-merged.csv"
+human_data <- read.csv(human_judgement_path)
+
+human_judgment_by_group <- get_human_judgment_by_group(human_data)
+
+# processed_base_data <- process_llm_data(base_data)
+processed_inst_data <- process_llm_data(instruct_data)
+
+result <- get_single_plot(processed_inst_data)
+
+plot <- result$plot
+best_prompt_type <- result$best_prmopt_type
+inst_merged <- result$inst_merged
+plot
+
+ggsave("gpt-human.pdf", plot, width = 6, height = 4, dpi = 300)
+```
+
 
 ```{r}
 
