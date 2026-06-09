@@ -1,5 +1,5 @@
 ---
-title: "prejud-prompt"
+title: "Correlation analysis with human data"
 output: pdf_document
 date: "2025-07-09"
 ---
@@ -8,42 +8,45 @@ date: "2025-07-09"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+This is an R Markdown document.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+# Check for installed packages
 
-```{r cars}
+```{r packages}
+requireNamespace("dplyr")
+requireNamespace("ggplot2")
+requireNamespace("generics")
+requireNamespace("purrr")
+requireNamespace("broom")
+requireNamespace("ggrepel")
+```
+
+## Install any missing packages by uncommenting the corresponding line
+
+```{r installs}
+#install.packages("dpylr")
+#install.packages("ggplot2")
+#install.packages("generics")
+#install.packages("purrr")
+#install.packages("broom")
+#install.packages("ggrepel")
+```
+
+```{r libraries}
 library(dplyr)
 library(ggplot2)
 library(purrr)
+library(generics)
 library(broom)
 library(ggrepel)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-
-get_human_judgment_by_group <- function(human_data) {
-human_judgment_by_group <- human_data %>%
-  group_by(title, version) %>%
-  summarise(
-    total = n(),
-    yes_count = sum(individual_judgment == "yes", na.rm = TRUE),
-    no_count = sum(individual_judgment == "no", na.rm = TRUE),
-    percent_yes = yes_count / (yes_count + no_count)
-  ) %>%
-  ungroup()
-
-return(human_judgment_by_group)
-}
+```{}
 ```
 
-```{r pressure, echo=FALSE}
+```{r process, echo=FALSE}
 process_llm_data <- function(llm_data) {
 # Process llm_data to compute the desired probability differences
   llm_data_processed <- llm_data %>%
@@ -70,8 +73,7 @@ process_llm_data <- function(llm_data) {
 }
 ```
 
-
-```{r}
+```{r double_plot}
 get_double_plot <- function(processed_base_data, processed_inst_data) {
 
   base_merged <- processed_base_data %>%
@@ -158,14 +160,38 @@ get_double_plot <- function(processed_base_data, processed_inst_data) {
 }
 ```
 
-```{r}
-# Pipeline to generate Figure 3
+```{r human_data_by_group, echo=FALSE}
 
-base_data_path <- "H:\\Documents\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\meta-llama\\Llama-3.1-70B-results.csv"
+get_human_judgment_by_group <- function(human_data) {
+  human_judgment_by_group <- human_data %>%
+    group_by(title, version) %>%
+    summarise(
+      total = n(),
+      yes_count = sum(individual_judgment == "yes", na.rm = TRUE),
+      no_count = sum(individual_judgment == "no", na.rm = TRUE),
+      percent_yes = yes_count / (yes_count + no_count)
+    ) %>%
+    ungroup()
+  
+  return(human_judgment_by_group)
+}
+
+```
+
+```{}
+```
+
+```{r paths}
+# Pipeline to generate Figure 3
+setwd(".")
+# base_data_path <- ".\\runs\\runs-42_07_16\\meta-llama\\Llama-3.1-70B-results.csv"
+base_data_path <- file.path("runs", "runs-42_07_16", "meta-llama", "Llama-3.1-70B-results.csv")
 base_data <- read.csv(base_data_path)
-instruct_data_path <- "H:\\Documents\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\meta-llama\\Llama-3.3-70B-Instruct-results.csv"
+#instruct_data_path <- ".\\runs\\runs-42_07_16\\meta-llama\\Llama-3.3-70B-Instruct-results.csv"
+instruct_data_path <- file.path("runs", "runs-42_07_16", "meta-llama", "Llama-3.3-70B-Instruct-results.csv")
 instruct_data <- read.csv(instruct_data_path)
-human_judgement_path <- "H:\\Documents\\Github\\vague_contracts\\data\\1_falseconsensus\\main-merged.csv"
+#human_judgement_path <- ".\\data\\human\\main-merged.csv"
+human_judgement_path <- file.path("data", "human", "main-merged.csv")
 human_data <- read.csv(human_judgement_path)
 
 human_judgment_by_group <- get_human_judgment_by_group(human_data)
@@ -189,7 +215,7 @@ get_single_plot <- function(processed_inst_data) {
   inst_merged <- processed_inst_data %>%
     left_join(human_judgment_by_group, by = c("title", "version")) %>%
     mutate(source = "Instruct")
-  
+
   regression_stats <- inst_merged %>%
     group_by(prompt_type) %>%
     summarise(
@@ -211,7 +237,7 @@ get_single_plot <- function(processed_inst_data) {
       x = -0.4,
       y = 0.5   # adjust depending on your y-scale
     )
-  
+
   regression_label2 <- regression_stats %>%
     transmute(
       prompt_type,
@@ -219,7 +245,7 @@ get_single_plot <- function(processed_inst_data) {
       x = -0.42,
       y = 0.35   # adjust depending on y-scale
     )
-  
+
   plot <- ggplot(inst_merged, aes(x = prob_diff, y = percent_yes, color = source, shape = source)) +
     geom_point(alpha = 0.6, size = 2.5) +
     # Regression line for inst_data only
@@ -253,11 +279,11 @@ get_single_plot <- function(processed_inst_data) {
       title = "Human and LLM judgment by Question Variation"
     ) +
     theme_minimal()
-  
+
   best_r2_row <- regression_stats %>% slice_max(r2, n = 1)
-  
+
   return (list(
-    plot=plot, 
+    plot=plot,
     best_prmopt_type=best_r2_row$prompt_type,
     inst_merged=inst_merged)
     )
@@ -269,9 +295,10 @@ get_single_plot <- function(processed_inst_data) {
 
 # base_data_path <- "H:\\Documents\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\meta-llama\\Llama-3.1-70B-results.csv"
 # base_data <- read.csv(base_data_path)
-instruct_data_path <- "runs\\runs-42_07_16\\openai-gpt-4-results.csv"
+instruct_data_path <- file.path("runs", "runs-42_07_16", "openai-gpt-4-results.csv")
 instruct_data <- read.csv(instruct_data_path)
-human_judgement_path <- "H:\\Documents\\Github\\vague_contracts\\data\\1_falseconsensus\\main-merged.csv"
+#human_judgement_path <- ".\\data\\human\\main-merged.csv"
+human_judgement_path <- file.path("data", "human", "main-merged.csv")
 human_data <- read.csv(human_judgement_path)
 
 human_judgment_by_group <- get_human_judgment_by_group(human_data)
@@ -288,7 +315,6 @@ plot
 
 ggsave("gpt-human.pdf", plot, width = 6, height = 4, dpi = 300)
 ```
-
 
 ```{r}
 
@@ -391,7 +417,8 @@ get_single_plot <- function(processed_data, human_judgment_by_group) {
 }
 
 ```
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## Threshold Analysis
 
 ```{r}
 
@@ -425,12 +452,12 @@ threshold_analysis <- function(model_data, regression_result) {
 }
 ```
 
-
 ```{r}
 
 inner_loop <- function(file_name){
   data <- read.csv(file_name)
-  human_judgement_path <- "H:\\Documents\\Github\\vague_contracts\\data\\1_falseconsensus\\main-merged.csv"
+#  human_judgement_path <- "H:\\Documents\\Github\\vague_contracts\\data\\1_falseconsensus\\main-merged.csv"
+  human_judgement_path <- file.path("data", "human", "main-merged.csv")
   human_data <- read.csv(human_judgement_path)
 
 
@@ -467,27 +494,28 @@ inner_loop <- function(file_name){
 model_files <- c(
   "gpt2-medium-results.csv",
   "openai-gpt-4-results.csv",
-  "mistralai\\Ministral-8B-Instruct-2410-results.csv",
-  "meta-llama\\Llama-3.1-70B-results.csv",
-  "meta-llama\\Llama-3.2-1B-results.csv",
-  "meta-llama\\Llama-3.1-8B-Instruct-results.csv",
-  "meta-llama\\Llama-3.2-3B-Instruct-results.csv",
-  "meta-llama\\Llama-3.1-8B-results.csv",
-  "meta-llama\\Llama-3.2-3B-results.csv",
-  "meta-llama\\Llama-3.2-1B-Instruct-results.csv",
-  "meta-llama\\Llama-3.3-70B-Instruct-results.csv",
-  "allenai\\OLMo-2-1124-7B-Instruct-results.csv",
-  "allenai\\OLMo-2-1124-7B-results.csv",
-  "google\\gemma-7b-it-results.csv",
-  "google\\gemma-7b-results.csv"
+  file.path("mistralai", "Ministral-8B-Instruct-2410-results.csv"),
+  file.path("meta-llama", "Llama-3.1-70B-results.csv"),
+  file.path("meta-llama",  "Llama-3.2-1B-results.csv"),
+  file.path("meta-llama",  "Llama-3.2-1B-results.csv"),
+  file.path("meta-llama",  "Llama-3.1-8B-Instruct-results.csv"),
+  file.path("meta-llama",  "Llama-3.2-3B-Instruct-results.csv"),
+  file.path("meta-llama",  "Llama-3.1-8B-results.csv"),
+  file.path("meta-llama",  "Llama-3.2-3B-results.csv"),
+  file.path("meta-llama",  "Llama-3.2-1B-Instruct-results.csv"),
+  file.path("meta-llama",  "Llama-3.3-70B-Instruct-results.csv"),
+  file.path("allenai",  "OLMo-2-1124-7B-Instruct-results.csv"),
+  file.path("allenai",  "OLMo-2-1124-7B-results.csv"),
+  file.path("google",  "gemma-7b-it-results.csv"),
+  file.path("google",  "gemma-7b-results.csv")
 )
 
 model_datas <- list()
 regression_results <- list()
 
 for (i in seq_along(model_files)) {
-  prefix <- "H:\\Documents\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\"
-  full_path <- paste0(prefix, model_files[i])
+  #prefix <- "H:\\Documents\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\"
+  full_path <- file.path("runs", "runs-42_07_16", model_files[i])
   
   loop_results <- inner_loop(full_path)
   
@@ -567,7 +595,3 @@ final_reg_results # Table 6
 
 ggsave("best_prompt_for_each_model.pdf", plot, width = 10, height = 7.5, dpi = 300)
 ```
-
-
-
-
