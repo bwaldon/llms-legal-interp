@@ -291,7 +291,7 @@ get_single_plot <- function(processed_inst_data) {
 ```
 
 ```{r}
-# Pipeline to generate Figure 3 modified to generate Figure 5
+# Pipeline to generate Figure 3 modified to generate Figure 6
 
 # base_data_path <- "H:\\Documents\\Github\\llms-legal-interp\\runs\\runs-42_07_16\\meta-llama\\Llama-3.1-70B-results.csv"
 # base_data <- read.csv(base_data_path)
@@ -490,7 +490,7 @@ inner_loop <- function(file_name){
 ```
 
 ```{r}
-# Pipeline to generate and Best Prompt for Each Model Figure and Table 6
+# Pipeline to generate and Best Prompt for Each Model Figure 7 and Table 7
 model_files <- c(
   "gpt2-medium-results.csv",
   "openai-gpt-4-results.csv",
@@ -591,7 +591,7 @@ plot <- ggplot(final_model_data, aes(x = prob_diff, y = percent_yes, color = pro
   theme_minimal()
 
 plot
-final_reg_results # Table 6
+final_reg_results # Table 7
 
 ggsave("best_prompt_for_each_model.pdf", plot, width = 10, height = 7.5, dpi = 300)
 ```
